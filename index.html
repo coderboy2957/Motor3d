@@ -54,7 +54,7 @@
       height: 100%;
       min-height: 290px;
       touch-action: none;
-      background: radial-gradient(circle at 50% 42%, #1b263b 0%, #0d121a 56%, #06080c 100%);
+      background: radial-gradient(circle at 50% 42%, #22314d 0%, #0e1420 56%, #06080c 100%);
     }
 
     canvas {
@@ -98,6 +98,40 @@
       box-shadow: 0 0 12px rgba(249, 115, 22, 0.65);
     }
 
+    input[type="range"].gas-slide-track {
+      -webkit-appearance: none;
+      appearance: none;
+      background: linear-gradient(90deg, #1e293b 0%, #7c2d12 55%, #ea580c 100%);
+      height: 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(251, 146, 60, 0.35);
+      outline: none;
+    }
+    input[type="range"].gas-slide-track::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      background: linear-gradient(145deg, #fb923c, #ea580c);
+      cursor: grab;
+      border: 2px solid #fff7ed;
+      box-shadow: 0 0 16px rgba(249, 115, 22, 0.8);
+    }
+    input[type="range"].gas-slide-track:active::-webkit-slider-thumb {
+      cursor: grabbing;
+      transform: scale(1.08);
+    }
+    input[type="range"].gas-slide-track::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      background: linear-gradient(145deg, #fb923c, #ea580c);
+      cursor: grab;
+      border: 2px solid #fff7ed;
+      box-shadow: 0 0 16px rgba(249, 115, 22, 0.8);
+    }
+
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -130,7 +164,7 @@
           </span>
         </div>
         <p class="text-[11px] text-slate-400 hidden md:block">
-          60° V12 DOHC · 6-Gang Schaltgetriebe · Schleifpunkt &amp; Schiebebetrieb-Pops · Tuning-Werkstatt
+          60° V12 DOHC · Schneckenhaus-Turbo &amp; Kompressor · Zündimpuls-Sound · 5 Tuning-Kategorien
         </p>
       </div>
     </div>
@@ -138,7 +172,10 @@
     <!-- Kameraperspektiven -->
     <div class="flex flex-wrap items-center gap-1" role="group" aria-label="Kameraperspektiven">
       <button type="button" data-cam="closeup" class="cam-btn px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-orange-500 text-white shadow transition cursor-pointer">
-        Motorraum
+        Übersicht
+      </button>
+      <button type="button" data-cam="turbo" class="cam-btn px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-surface hover:bg-slate-700/80 text-slate-200 border border-slate-700/70 transition cursor-pointer">
+        Turbo &amp; Ansaug
       </button>
       <button type="button" data-cam="pistons" class="cam-btn px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-surface hover:bg-slate-700/80 text-slate-200 border border-slate-700/70 transition cursor-pointer">
         Kolben &amp; Welle
@@ -147,17 +184,14 @@
         Kupplung &amp; Gang
       </button>
       <button type="button" data-cam="headers" class="cam-btn px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-surface hover:bg-slate-700/80 text-slate-200 border border-slate-700/70 transition cursor-pointer">
-        Krümmer &amp; Ansaug
-      </button>
-      <button type="button" data-cam="front" class="cam-btn px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-surface hover:bg-slate-700/80 text-slate-200 border border-slate-700/70 transition cursor-pointer">
-        Front &amp; Riemen
+        Krümmer &amp; Auspuff
       </button>
       <button type="button" data-cam="orbit" class="cam-btn px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-surface hover:bg-slate-700/80 text-slate-200 border border-slate-700/70 transition cursor-pointer">
         Freie Kamera
       </button>
     </div>
 
-    <!-- Aktionen: Starten, X-Ray, Sound + Lautstärke, Vollbild, Tuning -->
+    <!-- Aktionen: Starten, X-Ray, Sound + Live-Monitor, Vollbild, Tuning -->
     <div class="flex flex-wrap items-center gap-1.5">
       <button id="btn-restart-engine" type="button" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600/90 hover:bg-emerald-500 text-white transition cursor-pointer flex items-center gap-1">
         <span>⚡</span>
@@ -168,10 +202,11 @@
       </button>
       <div class="flex items-center gap-1.5 bg-surface border border-sky-500/30 rounded-lg px-2 py-1">
         <button id="btn-toggle-sound" type="button" class="text-xs font-semibold text-sky-300 hover:text-sky-200 transition cursor-pointer flex items-center gap-1">
-          <span id="sound-icon">🔊</span>
-          <span id="sound-label" class="hidden sm:inline">Sound An</span>
+          <span id="sound-icon">🔇</span>
+          <span id="sound-label" class="hidden sm:inline">Sound Aus</span>
         </button>
-        <input id="sound-volume" type="range" min="0" max="100" value="75" aria-label="Sound-Lautstärke" class="w-14 sm:w-16 tuning-slider" />
+        <canvas id="audio-monitor-canvas" width="54" height="18" title="Zündimpuls- &amp; Auspuff-Monitor" class="rounded bg-panel border border-slate-700/80"></canvas>
+        <input id="sound-volume" type="range" min="0" max="100" value="80" aria-label="Sound-Lautstärke" class="w-12 sm:w-16 tuning-slider" />
       </div>
       <button id="btn-fullscreen" type="button" title="Vollbild umschalten" class="px-2 py-1.5 rounded-lg text-xs font-semibold bg-surface hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer">
         ⛶
@@ -183,7 +218,7 @@
     </div>
   </header>
 
-  <!-- Hauptbereich: 3D-Ansicht + Telemetrie + Touch/Desktop-Steuerung + Tuning -->
+  <!-- Hauptbereich: 3D-Ansicht + Telemetrie + Touch/Schieberegler-Steuerung + Tuning -->
   <main class="flex-1 flex flex-col lg:flex-row min-h-0 relative">
 
     <!-- Hauptbereich links -->
@@ -204,11 +239,11 @@
 
         <!-- Kompakte Status-Pill oben links im Viewport -->
         <div class="absolute top-3 left-3 z-10 flex flex-wrap items-center gap-1.5 pointer-events-none">
-          <span id="overlay-induction-pill" class="px-2.5 py-1 rounded-full bg-panel/80 border border-slate-700/80 text-[11px] font-mono text-slate-200 backdrop-blur-sm">
+          <span id="overlay-induction-pill" class="px-2.5 py-1 rounded-full bg-panel/85 border border-slate-700/80 text-[11px] font-mono text-slate-200 backdrop-blur-sm">
             6.5L V12 · Sauger
           </span>
           <span id="overlay-overrun-pill" class="hidden px-2.5 py-1 rounded-full bg-orange-500/25 border border-orange-400/60 text-[11px] font-mono font-semibold text-orange-200 backdrop-blur-sm">
-            SCHIEBEBETRIEB / POPS
+            SCHIEBEBETRIEB · BRUMM-POPS
           </span>
         </div>
 
@@ -268,7 +303,7 @@
             <div class="text-[10px] text-slate-400 mt-0.5 truncate" id="gear-hint">Kupplung treten &amp; Gang wählen</div>
           </div>
 
-          <!-- Kupplung & Schleifpunkt (0% = Eingekuppelt/Kraftschluss, 100% = Getreten/Getrennt) -->
+          <!-- Kupplung & Schleifpunkt -->
           <div class="bg-surface/90 border border-slate-800 rounded-xl px-2.5 py-1.5">
             <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
               <span>KUPPLUNG</span>
@@ -288,7 +323,7 @@
           <div class="bg-surface/90 border border-slate-800 rounded-xl px-2.5 py-1.5">
             <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
               <span>DREHMOMENT</span>
-              <span class="text-slate-500">LIVE</span>
+              <span id="afr-readout" class="text-amber-300/90">λ 0.88</span>
             </div>
             <div class="flex items-baseline justify-between mt-0.5">
               <span id="telemetry-torque" class="font-mono text-base sm:text-xl font-bold text-white">0</span>
@@ -312,12 +347,12 @@
         </div>
       </div>
 
-      <!-- Ergonomisches Steuerpult für Smartphone/Tablet (Multi-Touch) & Desktop -->
+      <!-- Steuerpult: Schaltung + Kupplung + Gas-Schieberegler & Touch-Pedale -->
       <div class="bg-panel border-t border-slate-800 px-2.5 sm:px-3 py-2.5 shrink-0">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 items-stretch">
 
-          <!-- Schaltung: +/- Wippen + Direkte H-Schaltung (R, N, 1-6) -->
-          <div class="lg:col-span-5 bg-surface/85 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between">
+          <!-- Schaltung -->
+          <div class="lg:col-span-4 bg-surface/85 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between">
             <div class="flex items-center justify-between gap-2 mb-1.5">
               <span class="text-xs font-semibold text-slate-200">SCHALTEN (R · N · 1–6)</span>
               <div class="flex items-center gap-1">
@@ -342,11 +377,11 @@
             </div>
 
             <p class="text-[11px] text-slate-400 mt-1.5 leading-snug">
-              <span class="text-slate-200 font-medium">100%</span> = getreten (getrennt) · <span class="text-amber-300 font-medium">Schleifpunkt</span> = Kraftschluss mit Gas aufbauen · <span class="text-emerald-300 font-medium">0%</span> = voll eingekuppelt.
+              <span class="text-slate-200 font-medium">100%</span> = getrennt · <span class="text-amber-300 font-medium">Schleifpunkt</span> = Gas anlegen &amp; lösen · <span class="text-emerald-300 font-medium">0%</span> = Kraftschluss.
             </p>
           </div>
 
-          <!-- Kupplungs-Steuerung mit Schleifpunkt-Touch-Zone -->
+          <!-- Kupplungs-Steuerung -->
           <div class="lg:col-span-4 bg-surface/85 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between">
             <div class="flex items-center justify-between">
               <span class="text-xs font-semibold text-slate-200">KUPPLUNG (Shift / C)</span>
@@ -372,22 +407,33 @@
             </div>
           </div>
 
-          <!-- Multi-Touch Gaspedal & Bremse -->
-          <div class="lg:col-span-3 bg-surface/85 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between gap-1.5">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold text-slate-200">PEDALE</span>
+          <!-- Gas-Schieberegler + Touch-Pedale (Gas & Bremse) -->
+          <div class="lg:col-span-4 bg-surface/85 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between gap-2">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-semibold text-slate-200">GAS-REGLER</span>
+                <button id="btn-gas-return-mode" type="button" title="Zwischen Feder-Rückstellung und Halte-Modus wechseln" class="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-panel hover:bg-slate-700 text-amber-300 border border-slate-700 cursor-pointer">
+                  Feder: AN
+                </button>
+              </div>
               <span id="throttle-readout-small" class="font-mono text-xs font-bold text-orange-400">0% GAS</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-2 flex-1">
-              <button id="btn-brake" type="button" class="touch-control py-3 sm:py-2 px-2 rounded-xl text-xs font-bold bg-rose-600/25 hover:bg-rose-600/40 active:bg-rose-600 text-rose-200 active:text-white border border-rose-500/50 transition flex flex-col items-center justify-center cursor-pointer">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-mono text-slate-400">0%</span>
+              <input id="throttle-slider" type="range" min="0" max="100" value="0" aria-label="Gas-Schieberegler" class="touch-control gas-slide-track flex-1" />
+              <span class="text-[10px] font-mono text-orange-400">100%</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-brake" type="button" class="touch-control py-2.5 sm:py-2 px-2 rounded-xl text-xs font-bold bg-rose-600/25 hover:bg-rose-600/40 active:bg-rose-600 text-rose-200 active:text-white border border-rose-500/50 transition flex items-center justify-center gap-1.5 cursor-pointer">
                 <span>BREMSE</span>
                 <span class="text-[10px] font-mono opacity-80">S / ↓</span>
               </button>
-              <button id="btn-throttle" type="button" class="touch-control relative overflow-hidden py-3 sm:py-2 px-2 rounded-xl text-xs font-bold bg-gradient-to-b from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 active:scale-[0.98] text-white border border-orange-300/40 shadow-lg shadow-orange-500/25 transition flex flex-col items-center justify-center cursor-pointer">
+              <button id="btn-throttle" type="button" class="touch-control relative overflow-hidden py-2.5 sm:py-2 px-2 rounded-xl text-xs font-bold bg-gradient-to-b from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 active:scale-[0.98] text-white border border-orange-300/40 shadow-lg shadow-orange-500/25 transition flex items-center justify-center gap-1.5 cursor-pointer">
                 <div id="throttle-fill-bar" class="absolute bottom-0 left-0 right-0 bg-white/20 pointer-events-none transition-all duration-75" style="height: 0%;"></div>
-                <span class="relative z-10">GAS GEBEN</span>
-                <span class="relative z-10 text-[10px] font-mono opacity-95">W / ↑ · Touch</span>
+                <span class="relative z-10">VOLLGAS</span>
+                <span class="relative z-10 text-[10px] font-mono opacity-95">W / ↑</span>
               </button>
             </div>
           </div>
@@ -396,122 +442,287 @@
       </div>
     </section>
 
-    <!-- Erweiterte Tuning-Werkstatt -->
-    <aside id="tuning-panel" class="w-full lg:w-96 bg-panel border-t lg:border-t-0 lg:border-l border-slate-800 overflow-y-auto p-3.5 sm:p-4 shrink-0 z-20">
-      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+    <!-- Erweiterte Tuning-Werkstatt mit 5 Kategorien -->
+    <aside id="tuning-panel" class="w-full lg:w-[25.5rem] bg-panel border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col shrink-0 z-20 lg:max-h-full">
+      <div class="flex items-center justify-between px-3.5 sm:px-4 pt-3.5 pb-2.5 border-b border-slate-800 shrink-0">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
             <span>🛠️</span>
             <span>Tuning-Werkstatt</span>
           </h2>
-          <p class="text-[11px] text-slate-400">Motor, Aufladung, Kupplung, Auspuff &amp; Getriebe</p>
+          <p class="text-[11px] text-slate-400">20+ Parameter in 5 Fachbereichen</p>
         </div>
         <button id="btn-reset-tuning" type="button" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer">
           Serie
         </button>
       </div>
 
-      <div class="space-y-3.5 text-xs">
-        <!-- Hubraum -->
-        <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
-          <div class="flex justify-between items-center mb-1">
-            <label for="tune-displacement" class="font-semibold text-slate-200">Hubraum (Bohrung &amp; Hub)</label>
-            <span id="val-displacement" class="font-mono font-bold text-orange-400">6.5 L</span>
+      <!-- Kategorie-Tabs -->
+      <div id="tuning-tabs" class="grid grid-cols-5 gap-1 px-3 py-2 border-b border-slate-800/80 bg-surface/40 shrink-0 text-[10px] font-semibold">
+        <button type="button" data-tab="air" class="tuning-tab py-1.5 px-1 rounded-lg bg-orange-500 text-white text-center cursor-pointer transition">Luft/Turbo</button>
+        <button type="button" data-tab="engine" class="tuning-tab py-1.5 px-1 rounded-lg bg-panel hover:bg-slate-700 text-slate-300 text-center cursor-pointer transition">Motor</button>
+        <button type="button" data-tab="fuel" class="tuning-tab py-1.5 px-1 rounded-lg bg-panel hover:bg-slate-700 text-slate-300 text-center cursor-pointer transition">Zündung</button>
+        <button type="button" data-tab="exhaust" class="tuning-tab py-1.5 px-1 rounded-lg bg-panel hover:bg-slate-700 text-slate-300 text-center cursor-pointer transition">Auspuff</button>
+        <button type="button" data-tab="drive" class="tuning-tab py-1.5 px-1 rounded-lg bg-panel hover:bg-slate-700 text-slate-300 text-center cursor-pointer transition">Antrieb</button>
+      </div>
+
+      <div class="overflow-y-auto p-3.5 sm:p-4 space-y-3 text-xs flex-1">
+        <!-- TAB 1: LUFT & AUFLADUNG -->
+        <div id="tab-air" class="tuning-tab-content space-y-3">
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-induction" class="font-semibold text-slate-200">Aufladungs-System</label>
+              <span id="val-induction" class="font-mono font-bold text-sky-400">Sauger</span>
+            </div>
+            <select id="tune-induction" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-400 cursor-pointer">
+              <option value="na" selected>Sauger (Natürlich angesaugt)</option>
+              <option value="singleturbo">Single-Turbo (Schneckenhaus + Chargepipe)</option>
+              <option value="twinturbo">Twin-Turbo (Doppel-Schneckenhaus)</option>
+              <option value="supercharger">Roots-Kompressor (Riemenantrieb)</option>
+            </select>
           </div>
-          <input id="tune-displacement" type="range" min="4.8" max="8.2" step="0.1" value="6.5" class="tuning-slider w-full" />
-          <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
-            <span>4.8 L (Drehfreudig)</span>
-            <span>8.2 L (Max. Drehmoment)</span>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-boost" class="font-semibold text-slate-200">Ladedruck-Ziel</label>
+              <span id="val-boost" class="font-mono font-bold text-sky-400">0.00 bar</span>
+            </div>
+            <input id="tune-boost" type="range" min="0" max="2.2" step="0.05" value="0" class="tuning-slider w-full" />
+            <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+              <span>0.00 bar</span>
+              <span>+2.20 bar</span>
+            </div>
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-spool" class="font-semibold text-slate-200">Turbolader-Größe / Ansprechverhalten</label>
+              <span id="val-spool" class="font-mono font-bold text-sky-400">Mittel (50%)</span>
+            </div>
+            <input id="tune-spool" type="range" min="10" max="100" step="5" value="50" class="tuning-slider w-full" />
+            <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+              <span>Klein (Früher Spool)</span>
+              <span>Groß (Spitzenleistung)</span>
+            </div>
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-intercooler" class="font-semibold text-slate-200">Ladeluftkühler-Wirkungsgrad</label>
+              <span id="val-intercooler" class="font-mono font-bold text-sky-400">85%</span>
+            </div>
+            <input id="tune-intercooler" type="range" min="50" max="100" step="5" value="85" class="tuning-slider w-full" />
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-intake" class="font-semibold text-slate-200">Ansaugung &amp; Trichter</label>
+              <span id="val-intake" class="font-mono font-bold text-sky-400">Serie</span>
+            </div>
+            <select id="tune-intake" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-400 cursor-pointer">
+              <option value="stock" selected>Serie (Gedämpfte Airbox)</option>
+              <option value="cone">Offene Sportluftfilter (Mehr Ansauggeräusch)</option>
+              <option value="velocity">Carbon-Einzeldrossel / Trichter (Race)</option>
+            </select>
           </div>
         </div>
 
-        <!-- Drehzahllimit -->
-        <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
-          <div class="flex justify-between items-center mb-1">
-            <label for="tune-redline" class="font-semibold text-slate-200">Drehzahllimit (Redline)</label>
-            <span id="val-redline" class="font-mono font-bold text-orange-400">8200 RPM</span>
+        <!-- TAB 2: MOTOR & INNEREIEN -->
+        <div id="tab-engine" class="tuning-tab-content hidden space-y-3">
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-displacement" class="font-semibold text-slate-200">Hubraum (Bohrung &amp; Hub)</label>
+              <span id="val-displacement" class="font-mono font-bold text-orange-400">6.5 L</span>
+            </div>
+            <input id="tune-displacement" type="range" min="4.8" max="8.4" step="0.1" value="6.5" class="tuning-slider w-full" />
           </div>
-          <input id="tune-redline" type="range" min="6800" max="9600" step="100" value="8200" class="tuning-slider w-full" />
-          <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
-            <span>6800 RPM</span>
-            <span>9600 RPM (V12 Scream)</span>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-redline" class="font-semibold text-slate-200">Drehzahlbegrenzer (Redline)</label>
+              <span id="val-redline" class="font-mono font-bold text-orange-400">8200 RPM</span>
+            </div>
+            <input id="tune-redline" type="range" min="6800" max="9800" step="100" value="8200" class="tuning-slider w-full" />
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-compression" class="font-semibold text-slate-200">Verdichtungsverhältnis</label>
+              <span id="val-compression" class="font-mono font-bold text-orange-400">11.5 : 1</span>
+            </div>
+            <input id="tune-compression" type="range" min="8.5" max="13.8" step="0.1" value="11.5" class="tuning-slider w-full" />
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-cams" class="font-semibold text-slate-200">Nockenwellen-Profil</label>
+              <span id="val-cams" class="font-mono font-bold text-orange-400">Serie</span>
+            </div>
+            <select id="tune-cams" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-orange-400 cursor-pointer">
+              <option value="stock" selected>Serie (Sanfter Leerlauf)</option>
+              <option value="sport">Sport-Nocken (Kernigeres Brummen)</option>
+              <option value="race">Race-Nocken (Hohe Drehzahl, rauer Leerlauf)</option>
+            </select>
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-forged" class="font-semibold text-slate-200">Kolben &amp; Pleuel</label>
+              <span id="val-forged" class="font-mono font-bold text-orange-400">Guss/Serie</span>
+            </div>
+            <select id="tune-forged" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-orange-400 cursor-pointer">
+              <option value="stock" selected>Serie (Standard-Kolben &amp; Pleuel)</option>
+              <option value="forged">Geschmiedete Kolben &amp; H-Schaft-Pleuel</option>
+            </select>
           </div>
         </div>
 
-        <!-- Aufladungsart -->
-        <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
-          <div class="flex justify-between items-center mb-1.5">
-            <label for="tune-induction" class="font-semibold text-slate-200">Aufladung</label>
-            <span id="val-induction" class="font-mono font-bold text-sky-400">Sauger</span>
+        <!-- TAB 3: KRAFTSTOFF & ZÜNDUNG -->
+        <div id="tab-fuel" class="tuning-tab-content hidden space-y-3">
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-lambda" class="font-semibold text-slate-200">Gemisch-Ziel (Lambda)</label>
+              <span id="val-lambda" class="font-mono font-bold text-amber-300">λ 0.88</span>
+            </div>
+            <input id="tune-lambda" type="range" min="0.76" max="1.05" step="0.01" value="0.88" class="tuning-slider w-full" />
+            <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+              <span>0.76 (Fett / Kühlung)</span>
+              <span>1.05 (Mager / Eco)</span>
+            </div>
           </div>
-          <select id="tune-induction" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-400 cursor-pointer">
-            <option value="na" selected>Sauger (Natürlich angesaugt)</option>
-            <option value="supercharger">Roots/Centrifugal Kompressor</option>
-            <option value="twinturbo">Twin-Turbo mit Ladeluftkühler</option>
-          </select>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-ignition" class="font-semibold text-slate-200">Zündzeitpunkt (Offset)</label>
+              <span id="val-ignition" class="font-mono font-bold text-amber-300">+0° KW</span>
+            </div>
+            <input id="tune-ignition" type="range" min="-8" max="10" step="1" value="0" class="tuning-slider w-full" />
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-pops" class="font-semibold text-slate-200">Schiebebetrieb-Pops / Schubknallen</label>
+              <span id="val-pops" class="font-mono font-bold text-orange-400">65%</span>
+            </div>
+            <input id="tune-pops" type="range" min="0" max="100" step="5" value="65" class="tuning-slider w-full" />
+            <div class="text-[10px] text-slate-400 mt-1">Knallt beim Gaswegnehmen aus höheren Drehzahlen.</div>
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-revlimit-fuel" class="font-semibold text-slate-200">Zünd-/Schubabschaltung-Härte</label>
+              <span id="val-cut-aggressiveness" class="font-mono font-bold text-amber-300">Sport</span>
+            </div>
+            <input id="tune-revlimit-fuel" type="range" min="20" max="100" step="10" value="60" class="tuning-slider w-full" />
+          </div>
         </div>
 
-        <!-- Ladedruck -->
-        <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
-          <div class="flex justify-between items-center mb-1">
-            <label for="tune-boost" class="font-semibold text-slate-200">Ladedruck</label>
-            <span id="val-boost" class="font-mono font-bold text-sky-400">0.00 bar</span>
+        <!-- TAB 4: ABGASANLAGE -->
+        <div id="tab-exhaust" class="tuning-tab-content hidden space-y-3">
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-exhaust" class="font-semibold text-slate-200">Abgasanlage</label>
+              <span id="val-exhaust" class="font-mono font-bold text-emerald-400">Sport</span>
+            </div>
+            <select id="tune-exhaust" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-emerald-400 cursor-pointer">
+              <option value="stock">Serie (Gedämpft &amp; kultiviert)</option>
+              <option value="sport" selected>Sport-Klappenauspuff (Kerniges Brummen)</option>
+              <option value="titanium">Titanium-Race (Aggressiver V12-Klang)</option>
+            </select>
           </div>
-          <input id="tune-boost" type="range" min="0" max="1.8" step="0.05" value="0" class="tuning-slider w-full" />
-          <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
-            <span>0.00 bar</span>
-            <span>+1.80 bar</span>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-headers" class="font-semibold text-slate-200">Krümmer &amp; Kat-Setup</label>
+              <span id="val-headers" class="font-mono font-bold text-emerald-400">Fächer + Sportkat</span>
+            </div>
+            <select id="tune-headers" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-emerald-400 cursor-pointer">
+              <option value="stock">Serie Gusskrümmer + Kat</option>
+              <option value="sportcat" selected>Fächerkrümmer + Sportkat</option>
+              <option value="straight">Equal-Length Race + Straight Pipe</option>
+            </select>
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-flow" class="font-semibold text-slate-200">Strömungs-Flow</label>
+              <span id="val-flow" class="font-mono font-bold text-emerald-400">112%</span>
+            </div>
+            <input id="tune-flow" type="range" min="80" max="145" step="2" value="112" class="tuning-slider w-full" />
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-glow" class="font-semibold text-slate-200">Krümmer- &amp; Auspuff-Glühen</label>
+              <span id="val-glow" class="font-mono font-bold text-orange-400">100%</span>
+            </div>
+            <input id="tune-glow" type="range" min="0" max="150" step="10" value="100" class="tuning-slider w-full" />
           </div>
         </div>
 
-        <!-- Abgasanlage -->
-        <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
-          <div class="flex justify-between items-center mb-1.5">
-            <label for="tune-exhaust" class="font-semibold text-slate-200">Abgasanlage &amp; Flow</label>
-            <span id="val-exhaust" class="font-mono font-bold text-emerald-400">Serie</span>
+        <!-- TAB 5: ANTRIEB & KUPPLUNG -->
+        <div id="tab-drive" class="tuning-tab-content hidden space-y-3">
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-clutchtype" class="font-semibold text-slate-200">Kupplungstyp</label>
+              <span id="val-clutchtype" class="font-mono font-bold text-amber-300">Serie</span>
+            </div>
+            <select id="tune-clutchtype" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-400 cursor-pointer">
+              <option value="stock" selected>Serie (Ausgewogener Schleifpunkt)</option>
+              <option value="sport">Sport-Kupplung (Straffer &amp; schneller)</option>
+              <option value="race">Sintermetall-Race (Direkt &amp; hart)</option>
+            </select>
           </div>
-          <select id="tune-exhaust" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-emerald-400 cursor-pointer mb-2">
-            <option value="stock" selected>Serie (Gedämpft &amp; kultiviert)</option>
-            <option value="sport">Sport-Klappenauspuff (Pops &amp; Growl)</option>
-            <option value="titanium">Titanium-Race (Aggressiver V12-Klang)</option>
-          </select>
-          <div class="flex justify-between items-center mb-1">
-            <span class="text-[11px] text-slate-300">Strömungs-Flow</span>
-            <span id="val-flow" class="font-mono font-bold text-emerald-400">100%</span>
-          </div>
-          <input id="tune-flow" type="range" min="80" max="140" step="2" value="100" class="tuning-slider w-full" />
-        </div>
 
-        <!-- Kupplung & Schwungrad -->
-        <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
-          <div class="flex justify-between items-center mb-1.5">
-            <label for="tune-clutchtype" class="font-semibold text-slate-200">Kupplung &amp; Schwungrad</label>
-            <span id="val-clutchtype" class="font-mono font-bold text-amber-300">Serie</span>
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-bitecenter" class="font-semibold text-slate-200">Schleifpunkt-Position</label>
+              <span id="val-bitecenter" class="font-mono font-bold text-amber-300">45%</span>
+            </div>
+            <input id="tune-bitecenter" type="range" min="25" max="70" step="1" value="45" class="tuning-slider w-full" />
           </div>
-          <select id="tune-clutchtype" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-400 cursor-pointer mb-2">
-            <option value="stock" selected>Serie (Ausgewogener Schleifpunkt)</option>
-            <option value="sport">Sport-Kupplung (Straffer &amp; schneller)</option>
-            <option value="race">Racing-Twin-Disc (Schärferer Punkt, leichtes Schwungrad)</option>
-          </select>
-          <div class="flex justify-between items-center mb-1">
-            <label for="tune-bitecenter" class="text-[11px] text-slate-300">Schleifpunkt-Position</label>
-            <span id="val-bitecenter" class="font-mono font-bold text-amber-300">45%</span>
-          </div>
-          <input id="tune-bitecenter" type="range" min="25" max="70" step="1" value="45" class="tuning-slider w-full" />
-        </div>
 
-        <!-- Achsübersetzung & Reifen -->
-        <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
-          <div class="flex justify-between items-center mb-1">
-            <label for="tune-finaldrive" class="font-semibold text-slate-200">Achsübersetzung</label>
-            <span id="val-finaldrive" class="font-mono font-bold text-amber-400">3.55</span>
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-bitewidth" class="font-semibold text-slate-200">Schleifpunkt-Breite</label>
+              <span id="val-bitewidth" class="font-mono font-bold text-amber-300">100%</span>
+            </div>
+            <input id="tune-bitewidth" type="range" min="55" max="150" step="5" value="100" class="tuning-slider w-full" />
           </div>
-          <input id="tune-finaldrive" type="range" min="2.73" max="4.56" step="0.01" value="3.55" class="tuning-slider w-full" />
-          <div class="flex justify-between items-center mt-2.5 mb-1">
-            <label for="tune-wheelradius" class="font-semibold text-slate-200">Reifen-Abrollradius</label>
-            <span id="val-wheelradius" class="font-mono font-bold text-amber-400">0.34 m</span>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-flywheel" class="font-semibold text-slate-200">Schwungrad-Masse</label>
+              <span id="val-flywheel" class="font-mono font-bold text-amber-300">Serie (100%)</span>
+            </div>
+            <input id="tune-flywheel" type="range" min="45" max="160" step="5" value="100" class="tuning-slider w-full" />
           </div>
-          <input id="tune-wheelradius" type="range" min="0.29" max="0.40" step="0.01" value="0.34" class="tuning-slider w-full" />
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="tune-gearing" class="font-semibold text-slate-200">Getriebe-Abstufung</label>
+              <span id="val-gearing" class="font-mono font-bold text-amber-300">Serie</span>
+            </div>
+            <select id="tune-gearing" class="w-full bg-panel border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-400 cursor-pointer">
+              <option value="short">Kurz (Spritzige Beschleunigung)</option>
+              <option value="stock" selected>Serie (Ausgewogen)</option>
+              <option value="long">Lang (Hohe Endgeschwindigkeit)</option>
+            </select>
+          </div>
+
+          <div class="bg-surface/75 border border-slate-800/80 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="tune-finaldrive" class="font-semibold text-slate-200">Achsübersetzung</label>
+              <span id="val-finaldrive" class="font-mono font-bold text-amber-400">3.55</span>
+            </div>
+            <input id="tune-finaldrive" type="range" min="2.73" max="4.56" step="0.01" value="3.55" class="tuning-slider w-full" />
+
+            <div class="flex justify-between items-center mt-2.5 mb-1">
+              <label for="tune-wheelradius" class="font-semibold text-slate-200">Reifen-Abrollradius</label>
+              <span id="val-wheelradius" class="font-mono font-bold text-amber-400">0.34 m</span>
+            </div>
+            <input id="tune-wheelradius" type="range" min="0.29" max="0.40" step="0.01" value="0.34" class="tuning-slider w-full" />
+          </div>
         </div>
       </div>
     </aside>
@@ -525,7 +736,7 @@
       // 1. KONFIGURATION & ZUSTAND
       // =========================================================================
       const GEAR_ORDER = ['R', 'N', '1', '2', '3', '4', '5', '6'];
-      const GEAR_RATIOS = {
+      const BASE_GEAR_RATIOS = {
         R: -3.15,
         N: 0.0,
         '1': 3.50,
@@ -537,17 +748,42 @@
       };
 
       const DEFAULT_TUNING = {
-        displacement: 6.5,     // 4.8 - 8.2 L
-        redline: 8200,         // 6800 - 9600 RPM
-        induction: 'na',       // 'na' | 'supercharger' | 'twinturbo'
-        boostMax: 0.0,         // 0.0 - 1.8 bar
-        exhaust: 'stock',      // 'stock' | 'sport' | 'titanium'
-        flowPct: 100,          // 80 - 140 %
-        clutchType: 'stock',   // 'stock' | 'sport' | 'race'
-        biteCenter: 45,        // 25 - 70 %
-        finalDrive: 3.55,      // 2.73 - 4.56
-        wheelRadius: 0.34,     // 0.29 - 0.40 m
+        induction: 'na',          // 'na' | 'singleturbo' | 'twinturbo' | 'supercharger'
+        boostMax: 0.0,            // 0.0 - 2.2 bar
+        spoolSize: 50,            // 10 - 100
+        intercoolerPct: 85,       // 50 - 100
+        intake: 'stock',          // 'stock' | 'cone' | 'velocity'
+        displacement: 6.5,        // 4.8 - 8.4 L
+        redline: 8200,            // 6800 - 9800 RPM
+        compression: 11.5,        // 8.5 - 13.8
+        cams: 'stock',            // 'stock' | 'sport' | 'race'
+        forged: 'stock',          // 'stock' | 'forged'
+        lambdaTarget: 0.88,       // 0.76 - 1.05
+        ignitionDeg: 0,           // -8 - +10
+        popsPct: 65,              // 0 - 100
+        cutAggressiveness: 60,    // 20 - 100
+        exhaust: 'sport',         // 'stock' | 'sport' | 'titanium'
+        headers: 'sportcat',      // 'stock' | 'sportcat' | 'straight'
+        flowPct: 112,             // 80 - 145 %
+        glowPct: 100,             // 0 - 150 %
+        clutchType: 'stock',      // 'stock' | 'sport' | 'race'
+        biteCenter: 45,           // 25 - 70 %
+        biteWidthPct: 100,        // 55 - 150 %
+        flywheelPct: 100,         // 45 - 160 %
+        gearing: 'stock',         // 'short' | 'stock' | 'long'
+        finalDrive: 3.55,         // 2.73 - 4.56
+        wheelRadius: 0.34,        // 0.29 - 0.40 m
       };
+
+      function getCurrentGearRatios() {
+        const mult =
+          state.tuning.gearing === 'short' ? 1.14 : state.tuning.gearing === 'long' ? 0.88 : 1.0;
+        const out = {};
+        GEAR_ORDER.forEach((g) => {
+          out[g] = BASE_GEAR_RATIOS[g] * mult;
+        });
+        return out;
+      }
 
       const state = {
         tuning: { ...DEFAULT_TUNING },
@@ -559,7 +795,6 @@
         speedKmh: 0,
         vehicleSpeedMs: 0,
         gear: 'N',
-        // clutchPedal: 1.0 = 100% getreten (getrennt), 0.0 = 0% getreten (voll eingekuppelt)
         clutchPedal: 1.0,
         clutchTarget: 1.0,
         clutchHoldActive: false,
@@ -567,6 +802,8 @@
         clutchBiteHoldActive: false,
         throttle: 0.0,
         throttleActive: false,
+        throttleSliderDragging: false,
+        throttleSpringReturn: true,
         brake: 0.0,
         brakeActive: false,
         boostBar: 0.0,
@@ -574,103 +811,130 @@
         horsepowerPs: 0,
         couplingFactor: 0.0,
         overrunActive: false,
+        firingPhase: 0.0,
+        pulseEnvelope: 0.0,
         crankAngle: 0,
         wheelAngle: 0,
         cameraMode: 'closeup',
         xrayOverride: false,
         tuningOpen: true,
+        activeTab: 'air',
       };
 
       // =========================================================================
-      // 2. MEHRSCHICHTIGER WEB-AUDIO V12-SYNTHESIZER (ZÜNDUNG, AUSPUFF, POPS, TURBO)
+      // 2. PULSIERENDER ZÜNDIMPULS-SOUND (BRUMM-BRUMM-BRUMM) & LIVE-MONITOR
       // =========================================================================
       const audioEngine = {
         ctx: null,
         masterGain: null,
         firingOsc: null,
-        secondHarmOsc: null,
-        subRumbleOsc: null,
-        whineOsc: null,
-        whineGain: null,
+        harm2Osc: null,
+        harm3Osc: null,
+        subOsc: null,
+        pulseGain: null,
         engineGain: null,
         exhaustFilter: null,
+        whineOsc: null,
+        whineGain: null,
         popGain: null,
         popTimer: 0,
         enabled: false,
-        volume: 0.75,
+        volume: 0.8,
+        monitorCanvas: null,
+        monitorCtx: null,
+        waveHistory: new Float32Array(36),
 
         init() {
+          if (!this.monitorCanvas) {
+            this.monitorCanvas = document.getElementById('audio-monitor-canvas');
+            if (this.monitorCanvas) {
+              this.monitorCtx = this.monitorCanvas.getContext('2d');
+            }
+          }
+
           if (this.ctx) {
             if (this.ctx.state === 'suspended') {
               this.ctx.resume().catch(() => {});
             }
             return;
           }
+
           try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             this.ctx = new AudioCtx();
 
             this.masterGain = this.ctx.createGain();
-            this.masterGain.gain.value = this.volume * 0.35;
+            this.masterGain.gain.value = this.volume * 0.42;
             this.masterGain.connect(this.ctx.destination);
 
-            // Waveshaper für warme, aggressive V12-Sättigung ohne schrille Spitzen
+            // Sättigung für kräftiges Auspuff-Brummen statt flachem Sinus/Sägezahn
             const shaper = this.ctx.createWaveShaper();
-            const samples = 256;
+            const samples = 512;
             const curve = new Float32Array(samples);
             for (let i = 0; i < samples; i++) {
               const x = (i * 2) / samples - 1;
-              curve[i] = Math.tanh(x * 1.9);
+              curve[i] = Math.tanh(x * 2.45) + 0.12 * Math.sin(x * Math.PI * 3);
             }
             shaper.curve = curve;
 
-            // 1. Zündfrequenz-Grundton (V12 4-Takt -> 6 Zündungen / Kurbelwellenumdrehung = RPM / 10 Hz)
+            // Grundfrequenz der Zündfolge + Harmonische
             this.firingOsc = this.ctx.createOscillator();
             this.firingOsc.type = 'sawtooth';
-            this.firingOsc.frequency.value = 85;
+            this.firingOsc.frequency.value = 82;
 
-            // 2. Oberschwingung für typischen V12-Klangcharakter
-            this.secondHarmOsc = this.ctx.createOscillator();
-            this.secondHarmOsc.type = 'triangle';
-            this.secondHarmOsc.frequency.value = 170;
-            const harmGain = this.ctx.createGain();
-            harmGain.gain.value = 0.45;
+            this.harm2Osc = this.ctx.createOscillator();
+            this.harm2Osc.type = 'triangle';
+            this.harm2Osc.frequency.value = 164;
+            const g2 = this.ctx.createGain();
+            g2.gain.value = 0.55;
 
-            // 3. Tieffrequentes Auspuff-Grollen
-            this.subRumbleOsc = this.ctx.createOscillator();
-            this.subRumbleOsc.type = 'sine';
-            this.subRumbleOsc.frequency.value = 42;
-            const subGain = this.ctx.createGain();
-            subGain.gain.value = 0.65;
+            this.harm3Osc = this.ctx.createOscillator();
+            this.harm3Osc.type = 'square';
+            this.harm3Osc.frequency.value = 41;
+            const g3 = this.ctx.createGain();
+            g3.gain.value = 0.35;
+
+            this.subOsc = this.ctx.createOscillator();
+            this.subOsc.type = 'sine';
+            this.subOsc.frequency.value = 41;
+            const gSub = this.ctx.createGain();
+            gSub.gain.value = 0.85;
+
+            // Zündimpuls-Hüllkurve ("Brumm-Brumm-Brumm")
+            this.pulseGain = this.ctx.createGain();
+            this.pulseGain.gain.value = 0.7;
 
             this.exhaustFilter = this.ctx.createBiquadFilter();
             this.exhaustFilter.type = 'lowpass';
-            this.exhaustFilter.frequency.value = 520;
-            this.exhaustFilter.Q.value = 2.2;
+            this.exhaustFilter.frequency.value = 540;
+            this.exhaustFilter.Q.value = 2.8;
 
             this.engineGain = this.ctx.createGain();
             this.engineGain.gain.value = 0.0;
 
             this.firingOsc.connect(shaper);
-            this.secondHarmOsc.connect(harmGain);
-            harmGain.connect(shaper);
-            this.subRumbleOsc.connect(subGain);
-            subGain.connect(this.exhaustFilter);
+            this.harm2Osc.connect(g2);
+            g2.connect(shaper);
+            this.harm3Osc.connect(g3);
+            g3.connect(shaper);
+            this.subOsc.connect(gSub);
+            gSub.connect(shaper);
 
-            shaper.connect(this.exhaustFilter);
+            shaper.connect(this.pulseGain);
+            this.pulseGain.connect(this.exhaustFilter);
             this.exhaustFilter.connect(this.engineGain);
             this.engineGain.connect(this.masterGain);
 
-            // 4. Turbo- / Kompressor-Pfeifen
+            // Turbo / Kompressor
             this.whineOsc = this.ctx.createOscillator();
             this.whineOsc.type = 'sine';
-            this.whineOsc.frequency.value = 1800;
+            this.whineOsc.frequency.value = 1750;
             this.whineGain = this.ctx.createGain();
             this.whineGain.gain.value = 0.0;
             this.whineOsc.connect(this.whineGain);
             this.whineGain.connect(this.masterGain);
 
-            // 5. Rauschgenerator für Schiebebetrieb-Pops / Burbles & Blow-Off
+            // Schiebebetrieb-Pops / Schubknallen
             const noiseLen = Math.floor(this.ctx.sampleRate * 1.2);
             const noiseBuf = this.ctx.createBuffer(1, noiseLen, this.ctx.sampleRate);
             const data = noiseBuf.getChannelData(0);
@@ -683,8 +947,8 @@
 
             const popFilter = this.ctx.createBiquadFilter();
             popFilter.type = 'bandpass';
-            popFilter.frequency.value = 780;
-            popFilter.Q.value = 1.6;
+            popFilter.frequency.value = 690;
+            popFilter.Q.value = 1.4;
 
             this.popGain = this.ctx.createGain();
             this.popGain.gain.value = 0.0;
@@ -694,8 +958,9 @@
             this.popGain.connect(this.masterGain);
 
             this.firingOsc.start();
-            this.secondHarmOsc.start();
-            this.subRumbleOsc.start();
+            this.harm2Osc.start();
+            this.harm3Osc.start();
+            this.subOsc.start();
             this.whineOsc.start();
             noiseSrc.start();
           } catch (err) {
@@ -706,7 +971,7 @@
         setVolume(val0to100) {
           this.volume = Math.max(0, Math.min(1, val0to100 / 100));
           if (this.masterGain && this.ctx) {
-            this.masterGain.gain.setTargetAtTime(this.volume * 0.35, this.ctx.currentTime, 0.03);
+            this.masterGain.gain.setTargetAtTime(this.volume * 0.42, this.ctx.currentTime, 0.03);
           }
         },
 
@@ -726,14 +991,14 @@
             const osc = this.ctx.createOscillator();
             const g = this.ctx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(210, now);
-            osc.frequency.exponentialRampToValueAtTime(72, now + 0.065);
-            g.gain.setValueAtTime(0.28, now);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+            osc.frequency.setValueAtTime(195, now);
+            osc.frequency.exponentialRampToValueAtTime(68, now + 0.065);
+            g.gain.setValueAtTime(0.3, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
             osc.connect(g);
             g.connect(this.masterGain);
             osc.start(now);
-            osc.stop(now + 0.075);
+            osc.stop(now + 0.08);
           } catch (_) {}
         },
 
@@ -746,9 +1011,9 @@
               const osc = this.ctx.createOscillator();
               const g = this.ctx.createGain();
               osc.type = 'sawtooth';
-              osc.frequency.setValueAtTime(55, t0);
-              osc.frequency.linearRampToValueAtTime(95, t0 + 0.08);
-              g.gain.setValueAtTime(0.18, t0);
+              osc.frequency.setValueAtTime(52, t0);
+              osc.frequency.linearRampToValueAtTime(98, t0 + 0.08);
+              g.gain.setValueAtTime(0.22, t0);
               g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.095);
               osc.connect(g);
               g.connect(this.masterGain);
@@ -758,17 +1023,70 @@
           } catch (_) {}
         },
 
-        triggerOverrunPop(intensity = 0.6) {
+        triggerOverrunPop(intensity = 0.7) {
           if (!this.enabled || !this.ctx || !this.popGain) return;
           try {
             const now = this.ctx.currentTime;
             this.popGain.gain.cancelScheduledValues(now);
-            this.popGain.gain.setValueAtTime(Math.min(0.45, 0.18 + intensity * 0.25), now);
-            this.popGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+            this.popGain.gain.setValueAtTime(Math.min(0.55, 0.22 + intensity * 0.32), now);
+            this.popGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
           } catch (_) {}
         },
 
+        drawMonitor() {
+          if (!this.monitorCtx || !this.monitorCanvas) return;
+          const ctx = this.monitorCtx;
+          const w = this.monitorCanvas.width;
+          const h = this.monitorCanvas.height;
+
+          ctx.clearRect(0, 0, w, h);
+          ctx.fillStyle = '#090d14';
+          ctx.fillRect(0, 0, w, h);
+
+          const sampleVal =
+            !this.enabled || !state.engineRunning || state.rpm <= 10
+              ? 0
+              : Math.min(1, state.pulseEnvelope * (0.35 + state.throttle * 0.65 + (state.rpm / state.tuning.redline) * 0.35));
+
+          for (let i = 0; i < this.waveHistory.length - 1; i++) {
+            this.waveHistory[i] = this.waveHistory[i + 1];
+          }
+          this.waveHistory[this.waveHistory.length - 1] = sampleVal;
+
+          ctx.strokeStyle = this.enabled ? '#fb923c' : '#475569';
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          for (let i = 0; i < this.waveHistory.length; i++) {
+            const x = (i / (this.waveHistory.length - 1)) * w;
+            const y = h - 2 - this.waveHistory[i] * (h - 4);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        },
+
         update(dt) {
+          // Zündimpuls-Hüllkurve (6 Zündungen pro Umdrehung -> RPM / 10 Hz)
+          if (state.engineRunning && state.rpm > 10) {
+            const firingFreq = Math.max(10, state.rpm / 10);
+            const camLopeJitter =
+              state.tuning.cams === 'race'
+                ? 1 + Math.sin(state.crankAngle * 0.5) * 0.14
+                : state.tuning.cams === 'sport'
+                ? 1 + Math.sin(state.crankAngle * 0.5) * 0.06
+                : 1.0;
+            state.firingPhase = (state.firingPhase + firingFreq * camLopeJitter * dt) % 1.0;
+
+            // Scharfer Anstieg bei jedem Zündimpuls, weiches Abklingen ("Brumm-Brumm-Brumm")
+            const rawPulse = Math.pow(Math.max(0, 1 - state.firingPhase * 1.45), 1.65);
+            const pulseDepth = Math.max(0.28, 0.85 - (state.rpm / state.tuning.redline) * 0.45);
+            state.pulseEnvelope = 1 - pulseDepth + rawPulse * pulseDepth;
+          } else {
+            state.pulseEnvelope = 0.0;
+          }
+
+          this.drawMonitor();
+
           if (!this.enabled || !this.ctx || !this.engineGain) return;
           const now = this.ctx.currentTime;
 
@@ -779,51 +1097,57 @@
             return;
           }
 
-          const firingHz = Math.max(25, state.rpm / 10);
-          const subHz = Math.max(14, state.rpm / 30);
+          const baseHz = Math.max(22, (state.rpm / 60) * 2.0);
+          const subHz = Math.max(13, state.rpm / 30);
 
-          this.firingOsc.frequency.setTargetAtTime(firingHz, now, 0.025);
-          this.secondHarmOsc.frequency.setTargetAtTime(firingHz * 2, now, 0.025);
-          this.subRumbleOsc.frequency.setTargetAtTime(subHz, now, 0.025);
+          this.firingOsc.frequency.setTargetAtTime(baseHz, now, 0.02);
+          this.harm2Osc.frequency.setTargetAtTime(baseHz * 2.0, now, 0.02);
+          this.harm3Osc.frequency.setTargetAtTime(subHz * 1.5, now, 0.02);
+          this.subOsc.frequency.setTargetAtTime(subHz, now, 0.02);
 
           const exhaustMult =
-            state.tuning.exhaust === 'titanium' ? 1.35 : state.tuning.exhaust === 'sport' ? 1.15 : 0.88;
+            state.tuning.exhaust === 'titanium' ? 1.4 : state.tuning.exhaust === 'sport' ? 1.2 : 0.9;
+          const headerMult =
+            state.tuning.headers === 'straight' ? 1.25 : state.tuning.headers === 'sportcat' ? 1.1 : 0.95;
           const flowMult = state.tuning.flowPct / 100;
-          const rpmNorm = Math.min(1.2, state.rpm / state.tuning.redline);
+          const rpmNorm = Math.min(1.25, state.rpm / state.tuning.redline);
 
           const cutoff = Math.min(
-            5200,
-            210 + rpmNorm * 2900 * exhaustMult * flowMult + state.throttle * 1350
+            5800,
+            195 + rpmNorm * 2800 * exhaustMult * headerMult * flowMult + state.throttle * 1550
           );
-          this.exhaustFilter.frequency.setTargetAtTime(cutoff, now, 0.035);
+          this.exhaustFilter.frequency.setTargetAtTime(cutoff, now, 0.025);
 
-          const loadVol = 0.11 + state.throttle * 0.24 + state.couplingFactor * 0.08 + rpmNorm * 0.08;
-          this.engineGain.gain.setTargetAtTime(Math.min(0.5, loadVol * exhaustMult), now, 0.035);
+          this.pulseGain.gain.setTargetAtTime(Math.max(0.25, state.pulseEnvelope * 1.15), now, 0.015);
 
-          // Turbo / Kompressor
+          const loadVol = 0.14 + state.throttle * 0.26 + state.couplingFactor * 0.08 + rpmNorm * 0.08;
+          this.engineGain.gain.setTargetAtTime(Math.min(0.56, loadVol * exhaustMult * headerMult), now, 0.025);
+
+          // Turbo- oder Kompressor-Sound
           if (state.tuning.induction !== 'na' && (state.boostBar > 0.03 || state.tuning.induction === 'supercharger')) {
             const isSuper = state.tuning.induction === 'supercharger';
             const whineLevel = isSuper
-              ? Math.min(0.11, (state.rpm / state.tuning.redline) * 0.09 * (0.4 + state.throttle * 0.6))
-              : Math.min(0.15, state.boostBar * 0.08);
+              ? Math.min(0.13, (state.rpm / state.tuning.redline) * 0.1 * (0.4 + state.throttle * 0.6))
+              : Math.min(0.17, state.boostBar * 0.085);
             const whineFreq = isSuper
-              ? 1200 + (state.rpm / state.tuning.redline) * 2600
-              : 1900 + rpmNorm * 3200 + state.boostBar * 850;
-            this.whineOsc.frequency.setTargetAtTime(whineFreq, now, 0.04);
-            this.whineGain.gain.setTargetAtTime(whineLevel, now, 0.04);
+              ? 1150 + (state.rpm / state.tuning.redline) * 2600
+              : 1850 + rpmNorm * 3200 + state.boostBar * 850;
+            this.whineOsc.frequency.setTargetAtTime(whineFreq, now, 0.035);
+            this.whineGain.gain.setTargetAtTime(whineLevel, now, 0.035);
           } else {
             this.whineGain.gain.setTargetAtTime(0.0, now, 0.05);
           }
 
-          // Schiebebetrieb-Pops / Burbles beim Gaswegnehmen bei hoher Drehzahl
-          if (state.overrunActive && state.rpm > 2400) {
+          // Schiebebetrieb-Pops / Schubknallen
+          const popStrength = state.tuning.popsPct / 100;
+          if (state.overrunActive && popStrength > 0.05 && state.rpm > 2100) {
             this.popTimer -= dt;
             if (this.popTimer <= 0) {
-              const popChance = state.tuning.exhaust === 'titanium' ? 0.85 : state.tuning.exhaust === 'sport' ? 0.72 : 0.25;
-              if (Math.random() < popChance) {
-                this.triggerOverrunPop((state.rpm - 2400) / 5000);
+              const exBoost = state.tuning.exhaust === 'titanium' ? 1.25 : state.tuning.exhaust === 'sport' ? 1.05 : 0.65;
+              if (Math.random() < Math.min(0.95, popStrength * exBoost)) {
+                this.triggerOverrunPop(((state.rpm - 2100) / 5200) * (0.4 + popStrength * 0.8));
               }
-              this.popTimer = 0.09 + Math.random() * 0.14;
+              this.popTimer = Math.max(0.055, (0.19 - popStrength * 0.1) + Math.random() * 0.12);
             }
           } else {
             this.popTimer = 0.04;
@@ -832,7 +1156,7 @@
       };
 
       // =========================================================================
-      // 3. HOCHDETAILLIERTES 3D-V12-MODELL (THREE.JS)
+      // 3. DETAILLIERTES 3D-V12-MODELL MIT SCHNECKENHAUS-TURBO & SCHAUFELRAD
       // =========================================================================
       const container = document.getElementById('canvas-container');
       const scene = new THREE.Scene();
@@ -842,24 +1166,30 @@
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.08;
       container.appendChild(renderer.domElement);
 
-      const ambientLight = new THREE.AmbientLight(0xdbeafe, 0.6);
+      const ambientLight = new THREE.AmbientLight(0xdbeafe, 0.62);
       scene.add(ambientLight);
 
-      const keyLight = new THREE.DirectionalLight(0xfff7ed, 1.5);
+      const keyLight = new THREE.DirectionalLight(0xfff7ed, 1.65);
       keyLight.position.set(6.5, 9.5, 7.5);
       keyLight.castShadow = true;
       keyLight.shadow.mapSize.width = 1024;
       keyLight.shadow.mapSize.height = 1024;
       scene.add(keyLight);
 
-      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.8);
-      rimLight.position.set(-7, 4, -6);
+      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.95);
+      rimLight.position.set(-7, 4.5, -6);
       scene.add(rimLight);
 
-      const exhaustGlowLight = new THREE.PointLight(0xf97316, 0.0, 5.5);
-      exhaustGlowLight.position.set(0, 0.65, -2.1);
+      const warmAccentLight = new THREE.PointLight(0xf97316, 0.65, 8);
+      warmAccentLight.position.set(1.8, 1.2, -1.6);
+      scene.add(warmAccentLight);
+
+      const exhaustGlowLight = new THREE.PointLight(0xff4500, 0.0, 6.0);
+      exhaustGlowLight.position.set(0, 0.65, -2.25);
       scene.add(exhaustGlowLight);
 
       const gridHelper = new THREE.GridHelper(20, 26, 0x334155, 0x151d2b);
@@ -869,90 +1199,208 @@
       const rootAssembly = new THREE.Group();
       scene.add(rootAssembly);
 
-      const shellCutawayParts = []; // Äußere Gehäuse/Ventildeckel/Getriebe-Hülle für Cutaway/X-Ray
+      const shellCutawayParts = [];
       const pistons = [];
       const camPulleys = [];
       const beltPulleys = [];
-      const exhaustTipMeshes = [];
+      const headerMeshes = [];
+      const turboImpellers = [];
       let crankGroup = null;
       let flywheelMesh = null;
       let clutchDiscMesh = null;
       let pressurePlateMesh = null;
       let outputShaftMesh = null;
-      let turboGroup = null;
+      let singleTurboGroup = null;
+      let twinTurboLeftGroup = null;
+      let twinTurboRightGroup = null;
+      let superchargerGroup = null;
+      let chargePipeGroup = null;
+      let coneFiltersGroup = null;
 
       const matBlock = new THREE.MeshStandardMaterial({
         color: 0x334155,
-        metalness: 0.82,
-        roughness: 0.3,
+        metalness: 0.84,
+        roughness: 0.28,
         transparent: true,
         opacity: 1.0,
       });
       const matValveCover = new THREE.MeshStandardMaterial({
         color: 0x1e293b,
-        metalness: 0.5,
-        roughness: 0.34,
+        metalness: 0.55,
+        roughness: 0.3,
         transparent: true,
         opacity: 1.0,
       });
       const matIntake = new THREE.MeshStandardMaterial({
         color: 0x0f172a,
-        metalness: 0.6,
-        roughness: 0.28,
+        metalness: 0.65,
+        roughness: 0.25,
         transparent: true,
         opacity: 1.0,
       });
       const matChrome = new THREE.MeshStandardMaterial({
         color: 0xe2e8f0,
-        metalness: 0.94,
+        metalness: 0.95,
         roughness: 0.14,
       });
-      const matPiston = new THREE.MeshStandardMaterial({
+      const matCompressorHousing = new THREE.MeshStandardMaterial({
         color: 0xcbd5e1,
-        metalness: 0.88,
-        roughness: 0.22,
+        metalness: 0.9,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 1.0,
+      });
+      const matTurbineHousing = new THREE.MeshStandardMaterial({
+        color: 0x573628,
+        metalness: 0.82,
+        roughness: 0.38,
+        emissive: 0xff3d00,
+        emissiveIntensity: 0.0,
+        transparent: true,
+        opacity: 1.0,
+      });
+      const matPiston = new THREE.MeshStandardMaterial({
+        color: 0xdbeafe,
+        metalness: 0.9,
+        roughness: 0.2,
       });
       const matCopper = new THREE.MeshStandardMaterial({
         color: 0xea580c,
-        metalness: 0.85,
-        roughness: 0.25,
+        metalness: 0.86,
+        roughness: 0.24,
       });
       const matExhaust = new THREE.MeshStandardMaterial({
         color: 0x7c2d12,
-        metalness: 0.78,
-        roughness: 0.36,
+        metalness: 0.8,
+        roughness: 0.34,
         emissive: 0xff4500,
         emissiveIntensity: 0.0,
       });
       const matClutchFriction = new THREE.MeshStandardMaterial({
         color: 0xd97706,
-        metalness: 0.4,
-        roughness: 0.6,
+        metalness: 0.45,
+        roughness: 0.55,
       });
       const matGearbox = new THREE.MeshStandardMaterial({
         color: 0x475569,
-        metalness: 0.78,
-        roughness: 0.35,
+        metalness: 0.8,
+        roughness: 0.32,
         transparent: true,
         opacity: 1.0,
       });
       const matBelt = new THREE.MeshStandardMaterial({
         color: 0x18181b,
+        metalness: 0.2,
+        roughness: 0.82,
+      });
+      const matSilicone = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
         metalness: 0.15,
-        roughness: 0.85,
+        roughness: 0.48,
       });
 
       function registerShellCutaway(mesh) {
         shellCutawayParts.push(mesh);
       }
 
+      // Erstellt ein detailliertes Schneckenhaus-Turbolader-Aggregat mit Verdichtergehäuse, Turbinengehäuse, Schaufelrädern, Welle & Wastegate
+      function createTurbochargerUnit(scale = 1.0) {
+        const unit = new THREE.Group();
+        unit.scale.setScalar(scale);
+
+        // Lagergehäuse (CHRA) in der Mitte
+        const centerGeo = new THREE.CylinderGeometry(0.11, 0.11, 0.26, 20);
+        centerGeo.rotateX(Math.PI / 2);
+        const centerMesh = new THREE.Mesh(centerGeo, matChrome);
+        unit.add(centerMesh);
+
+        // Verdichterschnecke (Spirale + Einlassstutzen)
+        const compGroup = new THREE.Group();
+        compGroup.position.set(0, 0, 0.16);
+        const compScrollGeo = new THREE.TorusGeometry(0.21, 0.095, 16, 28, Math.PI * 1.65);
+        const compScroll = new THREE.Mesh(compScrollGeo, matCompressorHousing);
+        compScroll.castShadow = true;
+        compGroup.add(compScroll);
+        registerShellCutaway(compScroll);
+
+        const compSnoutGeo = new THREE.CylinderGeometry(0.135, 0.155, 0.16, 22);
+        compSnoutGeo.rotateX(Math.PI / 2);
+        const compSnout = new THREE.Mesh(compSnoutGeo, matChrome);
+        compSnout.position.set(0, 0, 0.08);
+        compGroup.add(compSnout);
+
+        // Auslassstutzen des Verdichters nach oben/außen
+        const compOutletGeo = new THREE.CylinderGeometry(0.085, 0.095, 0.22, 16);
+        const compOutlet = new THREE.Mesh(compOutletGeo, matCompressorHousing);
+        compOutlet.position.set(0.16, 0.14, 0.02);
+        compOutlet.rotation.z = -0.78;
+        compGroup.add(compOutlet);
+
+        // Sichtbares Verdichterrad mit 8 Schaufeln
+        const wheelGroup = new THREE.Group();
+        wheelGroup.position.set(0, 0, 0.12);
+        const hubGeo = new THREE.CylinderGeometry(0.055, 0.08, 0.09, 16);
+        hubGeo.rotateX(Math.PI / 2);
+        const hub = new THREE.Mesh(hubGeo, matChrome);
+        wheelGroup.add(hub);
+
+        for (let b = 0; b < 8; b++) {
+          const bladeGeo = new THREE.BoxGeometry(0.022, 0.11, 0.055);
+          const blade = new THREE.Mesh(bladeGeo, matPiston);
+          const ang = (b * Math.PI * 2) / 8;
+          blade.position.set(Math.cos(ang) * 0.075, Math.sin(ang) * 0.075, 0);
+          blade.rotation.z = ang + 0.35;
+          wheelGroup.add(blade);
+        }
+        compGroup.add(wheelGroup);
+        turboImpellers.push(wheelGroup);
+        unit.add(compGroup);
+
+        // Turbinenschnecke (Abgasseite)
+        const turbGroup = new THREE.Group();
+        turbGroup.position.set(0, 0, -0.16);
+        const turbScrollGeo = new THREE.TorusGeometry(0.22, 0.1, 16, 28, Math.PI * 1.7);
+        const turbScroll = new THREE.Mesh(turbScrollGeo, matTurbineHousing);
+        turbScroll.castShadow = true;
+        turbGroup.add(turbScroll);
+        registerShellCutaway(turbScroll);
+
+        const turbFlangeGeo = new THREE.BoxGeometry(0.2, 0.2, 0.06);
+        const turbFlange = new THREE.Mesh(turbFlangeGeo, matChrome);
+        turbFlange.position.set(0.18, -0.06, -0.02);
+        turbGroup.add(turbFlange);
+
+        // Wastegate-Dose mit Stange
+        const wgCanGeo = new THREE.CylinderGeometry(0.085, 0.085, 0.11, 18);
+        const wgCan = new THREE.Mesh(wgCanGeo, matCopper);
+        wgCan.position.set(-0.22, 0.16, 0.02);
+        turbGroup.add(wgCan);
+
+        const wgRodGeo = new THREE.CylinderGeometry(0.014, 0.014, 0.18, 10);
+        wgRodGeo.rotateZ(0.75);
+        const wgRod = new THREE.Mesh(wgRodGeo, matChrome);
+        wgRod.position.set(-0.14, 0.08, 0.02);
+        turbGroup.add(wgRod);
+
+        unit.add(turbGroup);
+
+        return unit;
+      }
+
       function buildDetailedV12() {
-        // Prüfstand-Rahmen
-        const standGeo = new THREE.BoxGeometry(2.4, 0.18, 5.6);
+        // Prüfstand-Rahmen mit Verstrebungen
+        const standGeo = new THREE.BoxGeometry(2.5, 0.18, 5.8);
         const stand = new THREE.Mesh(standGeo, matIntake);
-        stand.position.set(0, -1.95, 0.3);
+        stand.position.set(0, -1.95, 0.25);
         stand.receiveShadow = true;
         rootAssembly.add(stand);
+
+        // Verrippte Ölwanne unter dem Block
+        const sumpGeo = new THREE.BoxGeometry(0.92, 0.34, 3.05);
+        const sump = new THREE.Mesh(sumpGeo, matBlock);
+        sump.position.set(0, -1.08, 0);
+        rootAssembly.add(sump);
+        registerShellCutaway(sump);
 
         // Kurbelwellen-Gruppe
         crankGroup = new THREE.Group();
@@ -964,30 +1412,28 @@
         const crankShaft = new THREE.Mesh(crankShaftGeo, matChrome);
         crankGroup.add(crankShaft);
 
-        // Haupt-Riemenscheibe vorne an der Kurbelwelle
-        const crankPulleyGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.12, 28);
+        const crankPulleyGeo = new THREE.CylinderGeometry(0.33, 0.33, 0.12, 28);
         crankPulleyGeo.rotateX(Math.PI / 2);
         const crankPulley = new THREE.Mesh(crankPulleyGeo, matChrome);
         crankPulley.position.set(0, 0, 1.72);
         crankGroup.add(crankPulley);
         beltPulleys.push(crankPulley);
 
-        // 6 Kurbelwangen mit Gegengewichten
         for (let i = 0; i < 6; i++) {
           const zPos = -1.25 + i * 0.5;
           const angle = (i * Math.PI) / 3;
-          const webGeo = new THREE.BoxGeometry(0.52, 0.26, 0.14);
+          const webGeo = new THREE.BoxGeometry(0.54, 0.27, 0.14);
           const web = new THREE.Mesh(webGeo, matChrome);
           web.position.set(0, 0, zPos);
           web.rotation.z = angle;
           crankGroup.add(web);
         }
 
-        // Front-Nebenaggregat-Riemenscheiben (Wasserpumpe, Lichtmaschine, Spannrolle)
+        // Front-Riemenscheiben & Rippenriemen
         const auxCoords = [
-          { x: -0.62, y: 0.48, r: 0.20 },
-          { x: 0.62, y: 0.48, r: 0.20 },
-          { x: 0.0, y: 0.72, r: 0.16 },
+          { x: -0.64, y: 0.48, r: 0.21 },
+          { x: 0.64, y: 0.48, r: 0.21 },
+          { x: 0.0, y: 0.74, r: 0.16 },
         ];
         auxCoords.forEach((p, idx) => {
           const geo = new THREE.CylinderGeometry(p.r, p.r, 0.09, 24);
@@ -998,13 +1444,12 @@
           beltPulleys.push(mesh);
         });
 
-        // Visueller Rippenriemen vorne
-        const beltLoopGeo = new THREE.TorusGeometry(0.66, 0.025, 10, 36);
+        const beltLoopGeo = new THREE.TorusGeometry(0.68, 0.026, 10, 36);
         const beltLoop = new THREE.Mesh(beltLoopGeo, matBelt);
         beltLoop.position.set(0, -0.32, 1.68);
         rootAssembly.add(beltLoop);
 
-        // 60° V12 Bänke (Links & Rechts)
+        // 60° V12 Bänke
         const bankAngles = [-Math.PI / 6, Math.PI / 6];
         const bankNames = ['L', 'R'];
 
@@ -1014,7 +1459,6 @@
           bankGroup.rotation.z = tiltAngle;
           rootAssembly.add(bankGroup);
 
-          // Motorblock mit Verrippung
           const blockGeo = new THREE.BoxGeometry(0.96, 0.96, 3.0);
           const blockMesh = new THREE.Mesh(blockGeo, matBlock);
           blockMesh.position.set(0, 0.55, 0);
@@ -1024,14 +1468,13 @@
           registerShellCutaway(blockMesh);
 
           for (let r = 0; r < 5; r++) {
-            const ribGeo = new THREE.BoxGeometry(1.02, 0.05, 2.96);
+            const ribGeo = new THREE.BoxGeometry(1.03, 0.05, 2.96);
             const rib = new THREE.Mesh(ribGeo, matBlock);
             rib.position.set(0, 0.22 + r * 0.17, 0);
             bankGroup.add(rib);
             registerShellCutaway(rib);
           }
 
-          // DOHC Zylinderkopf & Ventildeckel
           const headGeo = new THREE.BoxGeometry(1.06, 0.42, 3.05);
           const headMesh = new THREE.Mesh(headGeo, matValveCover);
           headMesh.position.set(0, 1.22, 0);
@@ -1039,7 +1482,6 @@
           bankGroup.add(headMesh);
           registerShellCutaway(headMesh);
 
-          // Nockenwellen-Riemenscheiben vorne
           [-0.26, 0.26].forEach((xOff, pIdx) => {
             const pulleyGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.08, 24);
             pulleyGeo.rotateX(Math.PI / 2);
@@ -1049,17 +1491,15 @@
             camPulleys.push(pulley);
           });
 
-          // 6 Zylinder, Kolben, Pleuel & Krümmerrohre pro Bank
           const sideSign = bIdx === 0 ? -1 : 1;
           for (let c = 0; c < 6; c++) {
             const zCyl = -1.25 + c * 0.5;
 
-            // Laufbuchse (halbtransparent, damit Kolbenbewegung immer klar sichtbar bleibt)
             const sleeveGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.72, 20, 1, true);
             const sleeveMat = new THREE.MeshStandardMaterial({
               color: 0x94a3b8,
-              metalness: 0.7,
-              roughness: 0.25,
+              metalness: 0.72,
+              roughness: 0.24,
               side: THREE.DoubleSide,
               transparent: true,
               opacity: 0.28,
@@ -1068,26 +1508,23 @@
             sleeve.position.set(0, 0.72, zCyl);
             bankGroup.add(sleeve);
 
-            // Kolben
             const pistonGeo = new THREE.CylinderGeometry(0.195, 0.195, 0.24, 20);
             const piston = new THREE.Mesh(pistonGeo, matPiston);
             piston.position.set(0, 0.72, zCyl);
             bankGroup.add(piston);
 
-            // Pleuelstange
             const rodGeo = new THREE.BoxGeometry(0.06, 0.55, 0.06);
             const rod = new THREE.Mesh(rodGeo, matCopper);
             rod.position.set(0, 0.35, zCyl);
             bankGroup.add(rod);
 
-            // Krümmer-Runner (6 pro Bank)
             const headerGeo = new THREE.CylinderGeometry(0.08, 0.09, 0.78, 12);
             const header = new THREE.Mesh(headerGeo, matExhaust);
             header.position.set(sideSign * 0.68, 0.96, zCyl);
             header.rotation.z = sideSign * -0.65;
             bankGroup.add(header);
+            headerMeshes.push(header);
 
-            // 120° Zündversatz über die Zylinder
             const phase = (c * Math.PI * 2) / 3 + (bIdx === 0 ? 0 : Math.PI / 6);
             pistons.push({
               mesh: piston,
@@ -1098,19 +1535,19 @@
             });
           }
 
-          // Sammler-Rohr & Endrohr mit Heat/Pop-Glow
           const collectorGeo = new THREE.CylinderGeometry(0.13, 0.13, 3.2, 16);
           collectorGeo.rotateX(Math.PI / 2);
           const collector = new THREE.Mesh(collectorGeo, matExhaust);
           collector.position.set(sideSign * 0.98, 0.65, -0.2);
           bankGroup.add(collector);
+          headerMeshes.push(collector);
 
-          const tipGeo = new THREE.CylinderGeometry(0.14, 0.13, 0.45, 16);
+          const tipGeo = new THREE.CylinderGeometry(0.145, 0.13, 0.48, 18);
           tipGeo.rotateX(Math.PI / 2);
           const tip = new THREE.Mesh(tipGeo, matExhaust);
-          tip.position.set(sideSign * 0.98, 0.65, -1.95);
+          tip.position.set(sideSign * 0.98, 0.65, -1.96);
           bankGroup.add(tip);
-          exhaustTipMeshes.push(tip);
+          headerMeshes.push(tip);
         });
 
         // Zentrales Ansaug-Plenum & 12 Ansaugtrichter
@@ -1132,14 +1569,74 @@
           });
         }
 
-        // Aufladungs-Gruppe hinten am Motor
-        turboGroup = new THREE.Group();
-        turboGroup.position.set(0, 0.45, -2.02);
-        rootAssembly.add(turboGroup);
+        // Sportluftfilter / Trichter vorne am Ansaugkanal
+        coneFiltersGroup = new THREE.Group();
+        coneFiltersGroup.position.set(0, 1.05, 1.62);
+        [-0.2, 0.2].forEach((xF) => {
+          const coneGeo = new THREE.CylinderGeometry(0.16, 0.1, 0.28, 18);
+          coneGeo.rotateX(Math.PI / 2);
+          const cone = new THREE.Mesh(coneGeo, matCopper);
+          cone.position.set(xF, 0, 0);
+          coneFiltersGroup.add(cone);
+        });
+        rootAssembly.add(coneFiltersGroup);
 
-        const snailGeo = new THREE.TorusGeometry(0.28, 0.12, 14, 24);
-        const snail = new THREE.Mesh(snailGeo, matChrome);
-        turboGroup.add(snail);
+        // Single-Turbo, Twin-Turbo, Ladeluftrohre & Kompressor
+        singleTurboGroup = createTurbochargerUnit(1.22);
+        singleTurboGroup.position.set(0.68, 0.25, -2.05);
+        singleTurboGroup.rotation.y = -0.35;
+        rootAssembly.add(singleTurboGroup);
+
+        twinTurboLeftGroup = createTurbochargerUnit(0.98);
+        twinTurboLeftGroup.position.set(-0.92, 0.25, -1.98);
+        twinTurboLeftGroup.rotation.y = 0.42;
+        rootAssembly.add(twinTurboLeftGroup);
+
+        twinTurboRightGroup = createTurbochargerUnit(0.98);
+        twinTurboRightGroup.position.set(0.92, 0.25, -1.98);
+        twinTurboRightGroup.rotation.y = -0.42;
+        rootAssembly.add(twinTurboRightGroup);
+
+        // Ladeluftrohre (Charge Pipes) mit blauen Silikon-Kupplungen
+        chargePipeGroup = new THREE.Group();
+        const pipeGeo = new THREE.CylinderGeometry(0.075, 0.075, 1.45, 16);
+        pipeGeo.rotateX(Math.PI / 2);
+        const pipeL = new THREE.Mesh(pipeGeo, matChrome);
+        pipeL.position.set(-0.78, 0.65, -1.25);
+        pipeL.rotation.x = 0.22;
+        chargePipeGroup.add(pipeL);
+
+        const pipeR = new THREE.Mesh(pipeGeo, matChrome);
+        pipeR.position.set(0.78, 0.65, -1.25);
+        pipeR.rotation.x = 0.22;
+        chargePipeGroup.add(pipeR);
+
+        const couplerGeo = new THREE.CylinderGeometry(0.088, 0.088, 0.16, 16);
+        couplerGeo.rotateX(Math.PI / 2);
+        [-0.78, 0.78].forEach((xC) => {
+          const coup = new THREE.Mesh(couplerGeo, matSilicone);
+          coup.position.set(xC, 0.58, -1.65);
+          chargePipeGroup.add(coup);
+        });
+        rootAssembly.add(chargePipeGroup);
+
+        // Roots-Kompressor oben im V-Tal
+        superchargerGroup = new THREE.Group();
+        superchargerGroup.position.set(0, 1.42, 0.05);
+        const scBodyGeo = new THREE.BoxGeometry(0.72, 0.34, 1.85);
+        const scBody = new THREE.Mesh(scBodyGeo, matCompressorHousing);
+        scBody.castShadow = true;
+        superchargerGroup.add(scBody);
+        registerShellCutaway(scBody);
+
+        for (let r = 0; r < 6; r++) {
+          const scRibGeo = new THREE.BoxGeometry(0.76, 0.035, 1.8);
+          const scRib = new THREE.Mesh(scRibGeo, matChrome);
+          scRib.position.set(0, 1.28 + r * 0.05, 0);
+          scRib.position.y = -0.14 + r * 0.055;
+          superchargerGroup.add(scRib);
+        }
+        rootAssembly.add(superchargerGroup);
 
         // Schwungrad, Kupplungsscheibe, Druckplatte & 6-Gang Schaltgetriebe
         const flywheelGeo = new THREE.CylinderGeometry(0.68, 0.68, 0.12, 32);
@@ -1167,7 +1664,6 @@
         rootAssembly.add(gearboxMesh);
         registerShellCutaway(gearboxMesh);
 
-        // Sichtbare Zahnräder im Getriebe-Bereich
         for (let g = 0; g < 4; g++) {
           const gearGeo = new THREE.CylinderGeometry(0.26 - g * 0.03, 0.26 - g * 0.03, 0.12, 18);
           gearGeo.rotateX(Math.PI / 2);
@@ -1187,8 +1683,13 @@
 
       const CAMERA_PRESETS = {
         closeup: {
-          pos: new THREE.Vector3(3.4, 2.1, 4.1),
-          target: new THREE.Vector3(0, 0.0, -0.3),
+          pos: new THREE.Vector3(3.4, 2.15, 4.1),
+          target: new THREE.Vector3(0, 0.0, -0.35),
+          cutaway: false,
+        },
+        turbo: {
+          pos: new THREE.Vector3(2.3, 1.35, -3.6),
+          target: new THREE.Vector3(0.2, 0.35, -1.8),
           cutaway: false,
         },
         pistons: {
@@ -1203,12 +1704,7 @@
         },
         headers: {
           pos: new THREE.Vector3(-3.8, 2.2, 2.2),
-          target: new THREE.Vector3(0, 0.35, -0.4),
-          cutaway: false,
-        },
-        front: {
-          pos: new THREE.Vector3(1.6, 0.9, 5.2),
-          target: new THREE.Vector3(0, -0.2, 1.2),
+          target: new THREE.Vector3(0, 0.35, -0.5),
           cutaway: false,
         },
         orbit: {
@@ -1297,12 +1793,12 @@
       resizeRenderer();
 
       // =========================================================================
-      // 4. PHYSIK- & TUNING-MODELL (SCHLEIFPUNKT, ABWÜRGEN, SCHIEBEBETRIEB)
+      // 4. PHYSIK- & TUNING-MODELL
       // =========================================================================
       function getClutchBandHalfWidth() {
-        if (state.tuning.clutchType === 'race') return 0.09;
-        if (state.tuning.clutchType === 'sport') return 0.11;
-        return 0.13;
+        const base =
+          state.tuning.clutchType === 'race' ? 0.085 : state.tuning.clutchType === 'sport' ? 0.11 : 0.13;
+        return base * (state.tuning.biteWidthPct / 100);
       }
 
       function computeCouplingFactor(clutchPedal, biteCenterPct) {
@@ -1323,18 +1819,34 @@
         const flowMult = state.tuning.flowPct / 100;
         const exhaustMult =
           state.tuning.exhaust === 'titanium' ? 1.08 : state.tuning.exhaust === 'sport' ? 1.04 : 1.0;
+        const headerMult =
+          state.tuning.headers === 'straight' ? 1.07 : state.tuning.headers === 'sportcat' ? 1.03 : 1.0;
+        const compFactor = 0.86 + ((state.tuning.compression - 8.5) / (13.8 - 8.5)) * 0.24;
+        const ignFactor = 1.0 + state.tuning.ignitionDeg * 0.006;
+        const lambdaDiff = Math.abs(state.tuning.lambdaTarget - 0.87);
+        const lambdaFactor = Math.max(0.88, 1.03 - lambdaDiff * 0.45);
+        const intakeFactor =
+          state.tuning.intake === 'velocity' ? 1.06 : state.tuning.intake === 'cone' ? 1.025 : 1.0;
+
         const redline = state.tuning.redline;
-
         const normRpm = Math.max(0.05, rpm / redline);
-        const curve = 0.72 + 0.36 * Math.sin(Math.min(1, normRpm * 1.35) * (Math.PI * 0.65));
-        const highRpmDrop = normRpm > 0.92 ? Math.max(0.42, 1 - (normRpm - 0.92) * 3.4) : 1.0;
+        const camPeak = state.tuning.cams === 'race' ? 0.82 : state.tuning.cams === 'sport' ? 0.72 : 0.64;
+        const curve = 0.7 + 0.38 * Math.sin(Math.min(1, normRpm * (1.1 + camPeak * 0.45)) * (Math.PI * 0.65));
+        const highRpmDrop = normRpm > 0.93 ? Math.max(0.45, 1 - (normRpm - 0.93) * 3.2) : 1.0;
 
-        const baseTorque = 580 * dispRatio * flowMult * exhaustMult * curve * highRpmDrop;
+        const baseTorque =
+          580 * dispRatio * flowMult * exhaustMult * headerMult * compFactor * ignFactor * lambdaFactor * intakeFactor * curve * highRpmDrop;
+
+        const icFactor = 0.75 + (state.tuning.intercoolerPct / 100) * 0.25;
         const boostFactor =
-          state.tuning.induction === 'supercharger' ? 0.52 : state.tuning.induction === 'twinturbo' ? 0.62 : 0.0;
-        const totalPotentialTorque = baseTorque * (1 + boostBar * boostFactor);
+          state.tuning.induction === 'supercharger'
+            ? 0.54
+            : state.tuning.induction === 'twinturbo' || state.tuning.induction === 'singleturbo'
+            ? 0.64 * icFactor
+            : 0.0;
 
-        const engineBrakingNm = -85 * dispRatio * (0.4 + normRpm);
+        const totalPotentialTorque = baseTorque * (1 + boostBar * boostFactor);
+        const engineBrakingNm = -88 * dispRatio * (0.4 + normRpm);
         return Math.round(throttle * totalPotentialTorque + (1 - throttle) * engineBrakingNm);
       }
 
@@ -1363,10 +1875,24 @@
       function stepSimulation(dt) {
         const clampedDt = Math.min(dt, 0.05);
 
+        // Gaspedal-Logik: Vollgas-Taster/Taste oder Schieberegler mit optionaler Feder-Rückstellung
         if (state.throttleActive) {
-          state.throttle = Math.min(1.0, state.throttle + clampedDt * 3.8);
-        } else {
-          state.throttle = Math.max(0.0, state.throttle - clampedDt * 4.5);
+          state.throttle = Math.min(1.0, state.throttle + clampedDt * 4.2);
+          if (!state.throttleSliderDragging) {
+            document.getElementById('throttle-slider').value = Math.round(state.throttle * 100);
+          }
+        } else if (!state.throttleSliderDragging && state.throttleSpringReturn) {
+          const sliderVal = Number(document.getElementById('throttle-slider').value) / 100;
+          if (sliderVal > 0) {
+            const nextVal = Math.max(0, sliderVal - clampedDt * 2.8);
+            document.getElementById('throttle-slider').value = Math.round(nextVal * 100);
+            state.throttle = nextVal;
+          } else {
+            state.throttle = Math.max(0.0, state.throttle - clampedDt * 4.8);
+          }
+        } else if (!state.throttleSliderDragging && !state.throttleSpringReturn) {
+          const sliderVal = Number(document.getElementById('throttle-slider').value) / 100;
+          state.throttle += (sliderVal - state.throttle) * Math.min(1, clampedDt * 14);
         }
 
         if (state.brakeActive) {
@@ -1383,7 +1909,8 @@
           state.clutchTarget = state.tuning.biteCenter / 100;
         }
 
-        const pedalSpeed = state.tuning.clutchType === 'race' ? 4.4 : state.tuning.clutchType === 'sport' ? 3.8 : 3.2;
+        const pedalSpeed =
+          state.tuning.clutchType === 'race' ? 4.6 : state.tuning.clutchType === 'sport' ? 3.9 : 3.2;
         if (Math.abs(state.clutchPedal - state.clutchTarget) > 0.001) {
           const dir = Math.sign(state.clutchTarget - state.clutchPedal);
           state.clutchPedal = Math.max(0, Math.min(1, state.clutchPedal + dir * pedalSpeed * clampedDt));
@@ -1391,21 +1918,28 @@
           state.clutchPedal = state.clutchTarget;
         }
 
-        // Ladedruck je nach Aufladungsart
+        // Ladedruck je nach Aufladungsart & Turbolader-Spool
         let targetBoost = 0;
+        const spoolThresh = 1400 + (state.tuning.spoolSize / 100) * 2400;
+        const spoolSpan = 1800 + (state.tuning.spoolSize / 100) * 2200;
         if (state.engineRunning && state.tuning.boostMax > 0) {
           if (state.tuning.induction === 'supercharger') {
-            targetBoost = state.tuning.boostMax * state.throttle * Math.min(1, state.rpm / 6500);
-          } else if (state.tuning.induction === 'twinturbo') {
-            targetBoost = state.tuning.boostMax * state.throttle * Math.min(1, Math.max(0, (state.rpm - 1900) / 3600));
+            targetBoost = state.tuning.boostMax * state.throttle * Math.min(1, state.rpm / 6200);
+          } else if (state.tuning.induction === 'twinturbo' || state.tuning.induction === 'singleturbo') {
+            const spoolFactor = Math.min(1, Math.max(0, (state.rpm - spoolThresh) / spoolSpan));
+            targetBoost = state.tuning.boostMax * state.throttle * (0.18 + 0.82 * spoolFactor);
           } else {
             targetBoost = state.tuning.boostMax * state.throttle * 0.45;
           }
         }
-        const spoolRate = targetBoost > state.boostBar ? 3.1 : 4.8;
+        const spoolRate =
+          targetBoost > state.boostBar
+            ? 4.4 - (state.tuning.spoolSize / 100) * 2.2
+            : 5.2;
         state.boostBar += (targetBoost - state.boostBar) * Math.min(1, clampedDt * spoolRate);
 
-        const gearRatio = GEAR_RATIOS[state.gear] || 0;
+        const ratios = getCurrentGearRatios();
+        const gearRatio = ratios[state.gear] || 0;
         const totalRatio = gearRatio * state.tuning.finalDrive;
         const coupling = computeCouplingFactor(state.clutchPedal, state.tuning.biteCenter);
         state.couplingFactor = coupling;
@@ -1413,7 +1947,7 @@
         const wheelRpmFromSpeed = ((state.vehicleSpeedMs / state.tuning.wheelRadius) * 60) / (2 * Math.PI);
         const drivelineRpm = Math.abs(wheelRpmFromSpeed * totalRatio);
 
-        state.overrunActive = state.engineRunning && state.throttle < 0.08 && state.rpm > 2400;
+        state.overrunActive = state.engineRunning && state.throttle < 0.08 && state.rpm > 2150;
 
         if (state.engineRunning) {
           const rawTorque = computeEngineTorqueNm(state.rpm, state.throttle, state.boostBar);
@@ -1425,8 +1959,9 @@
               ? (state.idleRpm - state.rpm) * 8.5
               : 0;
 
-          const flywheelLightBonus = state.tuning.clutchType === 'race' ? 1.28 : state.tuning.clutchType === 'sport' ? 1.12 : 1.0;
-          const inertiaFactor = (1950 / (state.tuning.displacement * 260)) * flywheelLightBonus;
+          const forgedBonus = state.tuning.forged === 'forged' ? 1.12 : 1.0;
+          const flywheelFactor = 100 / Math.max(45, state.tuning.flywheelPct);
+          const inertiaFactor = (1950 / (state.tuning.displacement * 260)) * flywheelFactor * forgedBonus;
           const freeRpmDelta = (rawTorque * inertiaFactor + idleAssist) * clampedDt;
 
           if (gearRatio !== 0 && coupling > 0.02) {
@@ -1434,8 +1969,9 @@
             const rpmDiff = targetSyncedRpm - state.rpm;
 
             const clutchTorque = rawTorque * coupling * Math.min(2.4, Math.abs(totalRatio) * 0.72);
-            const wheelForce = (clutchTorque * Math.abs(totalRatio) * (gearRatio < 0 ? -1 : 1)) / state.tuning.wheelRadius;
-            const accel = wheelForce / 1660;
+            const wheelForce =
+              (clutchTorque * Math.abs(totalRatio) * (gearRatio < 0 ? -1 : 1)) / state.tuning.wheelRadius;
+            const accel = wheelForce / 1620;
 
             state.vehicleSpeedMs += accel * clampedDt;
 
@@ -1455,7 +1991,8 @@
           }
 
           if (state.rpm > state.tuning.redline) {
-            state.rpm = state.tuning.redline - 95 + Math.sin(performance.now() * 0.065) * 45;
+            const cutAmp = 65 + (state.tuning.cutAggressiveness / 100) * 90;
+            state.rpm = state.tuning.redline - cutAmp + Math.sin(performance.now() * 0.075) * (cutAmp * 0.5);
           }
           state.rpm = Math.max(0, state.rpm);
         } else {
@@ -1464,13 +2001,14 @@
           state.horsepowerPs = 0;
         }
 
-        const rollingDrag = state.vehicleSpeedMs * 0.26;
-        const brakeDecel = state.brake * 15.0 * Math.sign(state.vehicleSpeedMs || 1);
-        state.vehicleSpeedMs -= (rollingDrag + (Math.abs(state.vehicleSpeedMs) > 0.05 ? brakeDecel : 0)) * clampedDt;
+        const rollingDrag = state.vehicleSpeedMs * 0.25;
+        const brakeDecel = state.brake * 15.5 * Math.sign(state.vehicleSpeedMs || 1);
+        state.vehicleSpeedMs -=
+          (rollingDrag + (Math.abs(state.vehicleSpeedMs) > 0.05 ? brakeDecel : 0)) * clampedDt;
 
         if (gearRatio >= 0 && state.vehicleSpeedMs < 0) state.vehicleSpeedMs = Math.max(0, state.vehicleSpeedMs);
         if (gearRatio < 0 && state.vehicleSpeedMs > 0) state.vehicleSpeedMs = Math.min(0, state.vehicleSpeedMs);
-        state.vehicleSpeedMs = Math.max(-20, Math.min(112, state.vehicleSpeedMs));
+        state.vehicleSpeedMs = Math.max(-22, Math.min(118, state.vehicleSpeedMs));
         state.speedKmh = Math.abs(state.vehicleSpeedMs * 3.6);
 
         const omegaCrank = (state.rpm / 60) * Math.PI * 2;
@@ -1478,15 +2016,15 @@
         const omegaWheel = state.vehicleSpeedMs / state.tuning.wheelRadius;
         state.wheelAngle = (state.wheelAngle + omegaWheel * clampedDt) % (Math.PI * 2);
 
-        animateEngine3D();
+        animateEngine3D(clampedDt);
         audioEngine.update(clampedDt);
         updateTelemetryUI();
       }
 
       // =========================================================================
-      // 5. 3D-ANIMATION & EXHAUST/OVER-RUN EFFEKT
+      // 5. 3D-ANIMATION, TURBO-SCHAUFELRÄDER & AUSPUFF-GLÜHEN
       // =========================================================================
-      function animateEngine3D() {
+      function animateEngine3D(dt) {
         if (crankGroup) crankGroup.rotation.z = state.crankAngle;
         if (flywheelMesh) flywheelMesh.rotation.z = state.crankAngle;
 
@@ -1497,13 +2035,21 @@
           camPulleys[i].rotation.z = -state.crankAngle * 0.5;
         }
 
+        // Turbolader-Schaufelräder drehen sich mit Drehzahl & Ladedruck extrem schnell
+        const impellerSpin = ((state.rpm * 2.4 + state.boostBar * 26000) / 60) * Math.PI * 2;
+        for (let i = 0; i < turboImpellers.length; i++) {
+          turboImpellers[i].rotation.z += impellerSpin * dt;
+        }
+
         if (clutchDiscMesh && pressurePlateMesh) {
-          const gearRatio = GEAR_RATIOS[state.gear] || 0;
+          const ratios = getCurrentGearRatios();
+          const gearRatio = ratios[state.gear] || 0;
           const totalRatio = gearRatio * state.tuning.finalDrive;
           clutchDiscMesh.rotation.z =
             gearRatio !== 0 && state.couplingFactor > 0.85
               ? state.crankAngle
-              : state.crankAngle * state.couplingFactor + state.wheelAngle * Math.abs(totalRatio) * (1 - state.couplingFactor);
+              : state.crankAngle * state.couplingFactor +
+                state.wheelAngle * Math.abs(totalRatio) * (1 - state.couplingFactor);
           pressurePlateMesh.rotation.z = state.crankAngle;
           pressurePlateMesh.position.z = -2.14 - 0.14 * state.clutchPedal;
         }
@@ -1522,23 +2068,30 @@
           p.rod.rotation.z = Math.cos(theta) * 0.16;
         }
 
-        if (turboGroup) {
-          turboGroup.visible = state.tuning.induction !== 'na' || state.boostBar > 0.01;
-          const s = 1.0 + state.boostBar * 0.15;
-          turboGroup.scale.set(s, s, s);
+        const ind = state.tuning.induction;
+        if (singleTurboGroup) singleTurboGroup.visible = ind === 'singleturbo';
+        if (twinTurboLeftGroup) twinTurboLeftGroup.visible = ind === 'twinturbo';
+        if (twinTurboRightGroup) twinTurboRightGroup.visible = ind === 'twinturbo';
+        if (superchargerGroup) superchargerGroup.visible = ind === 'supercharger';
+        if (chargePipeGroup) {
+          chargePipeGroup.visible = ind === 'singleturbo' || ind === 'twinturbo';
+        }
+        if (coneFiltersGroup) {
+          coneFiltersGroup.visible = state.tuning.intake === 'cone' || state.tuning.intake === 'velocity';
         }
 
-        // Auspuff-Hitze & Schiebebetrieb-Glow
+        const glowMult = state.tuning.glowPct / 100;
         const heatLevel = Math.min(
-          1.0,
-          (state.rpm / state.tuning.redline) * state.throttle * 0.85 + (state.overrunActive ? 0.45 : 0)
+          1.25,
+          ((state.rpm / state.tuning.redline) * state.throttle * 0.92 + (state.overrunActive ? 0.52 : 0)) * glowMult
         );
-        matExhaust.emissiveIntensity = heatLevel * 0.65;
-        exhaustGlowLight.intensity = state.overrunActive && state.rpm > 2800 ? 1.4 : heatLevel * 0.5;
+        matExhaust.emissiveIntensity = heatLevel * 0.72;
+        matTurbineHousing.emissiveIntensity =
+          ind === 'singleturbo' || ind === 'twinturbo' ? heatLevel * 0.58 : 0.0;
+        exhaustGlowLight.intensity = state.overrunActive && state.rpm > 2500 ? 1.5 * glowMult : heatLevel * 0.55;
 
-        // Drehmoment-Nickbewegung & Vibration
         if (state.engineRunning && state.rpm > 10) {
-          const vib = (0.004 + (state.rpm / state.tuning.redline) * 0.008) * (0.35 + state.throttle * 0.65);
+          const vib = (0.0035 + (state.rpm / state.tuning.redline) * 0.008) * (0.35 + state.throttle * 0.65);
           rootAssembly.position.x = Math.sin(performance.now() * 0.08) * vib;
           rootAssembly.position.y = Math.cos(performance.now() * 0.11) * vib * 0.6;
           const torqueRoll = -state.throttle * (state.torqueNm / 1200) * 0.025;
@@ -1557,7 +2110,7 @@
       }
 
       // =========================================================================
-      // 6. UI, TOUCH-PEDALE, TASTATUR & TUNING-BINDINGS
+      // 6. UI, GAS-SCHIEBEREGLER, TOUCH-PEDALE, TASTATUR & TUNING-BINDINGS
       // =========================================================================
       const elRpm = document.getElementById('telemetry-rpm');
       const elRpmLimit = document.getElementById('rpm-limit-label');
@@ -1575,11 +2128,13 @@
       const elBiteBadge = document.getElementById('bite-status-badge');
       const elClutchCaption = document.getElementById('clutch-state-caption');
       const elTorque = document.getElementById('telemetry-torque');
+      const elAfrReadout = document.getElementById('afr-readout');
       const elLoadText = document.getElementById('telemetry-load-text');
       const elHp = document.getElementById('telemetry-hp');
       const elDispText = document.getElementById('telemetry-disp-text');
       const elClutchSlider = document.getElementById('clutch-slider');
       const elClutchSmall = document.getElementById('clutch-readout-small');
+      const elThrottleSlider = document.getElementById('throttle-slider');
       const elThrottleSmall = document.getElementById('throttle-readout-small');
       const elThrottleFill = document.getElementById('throttle-fill-bar');
       const elOverlayInd = document.getElementById('overlay-induction-pill');
@@ -1600,10 +2155,11 @@
         elRpmBar.style.width = `${Math.min(100, (state.rpm / state.tuning.redline) * 100)}%`;
 
         elSpeed.textContent = state.speedKmh.toFixed(1);
-        elSpeedBar.style.width = `${Math.min(100, (state.speedKmh / 330) * 100)}%`;
+        elSpeedBar.style.width = `${Math.min(100, (state.speedKmh / 350) * 100)}%`;
         elBoostReadout.textContent = `${state.boostBar.toFixed(2)} bar`;
 
-        const ratio = GEAR_RATIOS[state.gear] || 0;
+        const ratios = getCurrentGearRatios();
+        const ratio = ratios[state.gear] || 0;
         elGear.textContent = state.gear;
         elGearRatio.textContent = `${state.gear} (${ratio.toFixed(2)})`;
 
@@ -1654,6 +2210,7 @@
         }
 
         elTorque.textContent = state.torqueNm;
+        elAfrReadout.textContent = `λ ${state.tuning.lambdaTarget.toFixed(2)}`;
         const thrPct = Math.round(state.throttle * 100);
         const brkPct = Math.round(state.brake * 100);
         elLoadText.textContent = `Gas: ${thrPct}% · Bremse: ${brkPct}%`;
@@ -1662,6 +2219,8 @@
         const indName =
           state.tuning.induction === 'twinturbo'
             ? 'Twin-Turbo'
+            : state.tuning.induction === 'singleturbo'
+            ? 'Single-Turbo'
             : state.tuning.induction === 'supercharger'
             ? 'Kompressor'
             : 'Sauger';
@@ -1713,7 +2272,7 @@
       }
 
       function setGear(nextGear) {
-        if (!Object.prototype.hasOwnProperty.call(GEAR_RATIOS, nextGear)) return;
+        if (!Object.prototype.hasOwnProperty.call(BASE_GEAR_RATIOS, nextGear)) return;
         state.gear = nextGear;
         document.querySelectorAll('.gear-btn').forEach((btn) => {
           const active = btn.dataset.gear === nextGear;
@@ -1736,14 +2295,29 @@
         setGear(GEAR_ORDER[nextIdx]);
       }
 
-      // Gang-Events
+      // Tuning-Tabs umschalten
+      document.querySelectorAll('.tuning-tab').forEach((tabBtn) => {
+        tabBtn.addEventListener('click', () => {
+          const tab = tabBtn.dataset.tab;
+          state.activeTab = tab;
+          document.querySelectorAll('.tuning-tab').forEach((b) => {
+            const isAct = b.dataset.tab === tab;
+            b.className = isAct
+              ? 'tuning-tab py-1.5 px-1 rounded-lg bg-orange-500 text-white text-center cursor-pointer transition'
+              : 'tuning-tab py-1.5 px-1 rounded-lg bg-panel hover:bg-slate-700 text-slate-300 text-center cursor-pointer transition';
+          });
+          document.querySelectorAll('.tuning-tab-content').forEach((sec) => {
+            sec.classList.toggle('hidden', sec.id !== `tab-${tab}`);
+          });
+        });
+      });
+
       document.querySelectorAll('.gear-btn').forEach((btn) => {
         btn.addEventListener('click', () => setGear(btn.dataset.gear));
       });
       document.getElementById('btn-gear-down').addEventListener('click', () => shiftStep(-1));
       document.getElementById('btn-gear-up').addEventListener('click', () => shiftStep(1));
 
-      // Kamera- & Header-Events
       document.querySelectorAll('.cam-btn').forEach((btn) => {
         btn.addEventListener('click', () => applyCameraPreset(btn.dataset.cam));
       });
@@ -1820,14 +2394,6 @@
         state.clutchTarget = 0.0;
       });
 
-      window.addEventListener('pointerup', () => {
-        state.clutchHoldActive = false;
-        state.clutchReleaseActive = false;
-        state.clutchBiteHoldActive = false;
-        state.throttleActive = false;
-        state.brakeActive = false;
-      });
-
       elClutchSlider.addEventListener('input', (e) => {
         audioEngine.init();
         state.clutchHoldActive = false;
@@ -1836,7 +2402,26 @@
         state.clutchTarget = Number(e.target.value) / 100;
       });
 
-      // Gas & Bremse
+      // Gas-Schieberegler & Feder-Modus
+      const btnGasSpring = document.getElementById('btn-gas-return-mode');
+      btnGasSpring.addEventListener('click', () => {
+        state.throttleSpringReturn = !state.throttleSpringReturn;
+        btnGasSpring.textContent = state.throttleSpringReturn ? 'Feder: AN' : 'Halten: AN';
+      });
+
+      elThrottleSlider.addEventListener('pointerdown', () => {
+        audioEngine.init();
+        state.throttleSliderDragging = true;
+      });
+      elThrottleSlider.addEventListener('input', (e) => {
+        audioEngine.init();
+        state.throttle = Number(e.target.value) / 100;
+      });
+      elThrottleSlider.addEventListener('change', (e) => {
+        state.throttle = Number(e.target.value) / 100;
+      });
+
+      // Vollgas- & Brems-Taster
       const btnThrottle = document.getElementById('btn-throttle');
       const btnBrake = document.getElementById('btn-brake');
 
@@ -1849,6 +2434,15 @@
         e.preventDefault();
         audioEngine.init();
         state.brakeActive = true;
+      });
+
+      window.addEventListener('pointerup', () => {
+        state.clutchHoldActive = false;
+        state.clutchReleaseActive = false;
+        state.clutchBiteHoldActive = false;
+        state.throttleActive = false;
+        state.brakeActive = false;
+        state.throttleSliderDragging = false;
       });
 
       // Tastatursteuerung
@@ -1864,7 +2458,7 @@
           e.preventDefault();
           audioEngine.init();
           state.brakeActive = true;
-        } else if (e.key === 'Shift' || key === 'c') {
+        } else if (key === 'Shift' || key === 'c') {
           audioEngine.init();
           state.clutchTarget = 1.0;
         } else if (key === 'e') {
@@ -1888,65 +2482,112 @@
           state.throttleActive = false;
         } else if (key === 's' || e.key === 'ArrowDown') {
           state.brakeActive = false;
-        } else if (e.key === 'Shift' || key === 'c') {
+        } else if (key === 'Shift' || key === 'c') {
           state.clutchTarget = 0.0;
         }
       });
 
-      // Tuning-Controls synchronisieren
+      // Tuning-Werte synchronisieren
       function syncTuningUI() {
-        document.getElementById('tune-displacement').value = state.tuning.displacement;
-        document.getElementById('val-displacement').textContent = `${state.tuning.displacement.toFixed(1)} L`;
-
-        document.getElementById('tune-redline').value = state.tuning.redline;
-        document.getElementById('val-redline').textContent = `${state.tuning.redline} RPM`;
-
-        document.getElementById('tune-induction').value = state.tuning.induction;
+        const t = state.tuning;
+        document.getElementById('tune-induction').value = t.induction;
         document.getElementById('val-induction').textContent =
-          state.tuning.induction === 'twinturbo'
+          t.induction === 'twinturbo'
             ? 'Twin-Turbo'
-            : state.tuning.induction === 'supercharger'
+            : t.induction === 'singleturbo'
+            ? 'Single-Turbo'
+            : t.induction === 'supercharger'
             ? 'Kompressor'
             : 'Sauger';
 
-        document.getElementById('tune-boost').value = state.tuning.boostMax;
-        document.getElementById('val-boost').textContent = `${state.tuning.boostMax.toFixed(2)} bar`;
+        document.getElementById('tune-boost').value = t.boostMax;
+        document.getElementById('val-boost').textContent = `${t.boostMax.toFixed(2)} bar`;
 
-        document.getElementById('tune-exhaust').value = state.tuning.exhaust;
+        document.getElementById('tune-spool').value = t.spoolSize;
+        document.getElementById('val-spool').textContent =
+          t.spoolSize < 35 ? `Klein (${t.spoolSize}%)` : t.spoolSize > 70 ? `Groß (${t.spoolSize}%)` : `Mittel (${t.spoolSize}%)`;
+
+        document.getElementById('tune-intercooler').value = t.intercoolerPct;
+        document.getElementById('val-intercooler').textContent = `${t.intercoolerPct}%`;
+
+        document.getElementById('tune-intake').value = t.intake;
+        document.getElementById('val-intake').textContent =
+          t.intake === 'velocity' ? 'Trichter Race' : t.intake === 'cone' ? 'Sportfilter' : 'Serie';
+
+        document.getElementById('tune-displacement').value = t.displacement;
+        document.getElementById('val-displacement').textContent = `${t.displacement.toFixed(1)} L`;
+
+        document.getElementById('tune-redline').value = t.redline;
+        document.getElementById('val-redline').textContent = `${t.redline} RPM`;
+
+        document.getElementById('tune-compression').value = t.compression;
+        document.getElementById('val-compression').textContent = `${t.compression.toFixed(1)} : 1`;
+
+        document.getElementById('tune-cams').value = t.cams;
+        document.getElementById('val-cams').textContent =
+          t.cams === 'race' ? 'Race' : t.cams === 'sport' ? 'Sport' : 'Serie';
+
+        document.getElementById('tune-forged').value = t.forged;
+        document.getElementById('val-forged').textContent = t.forged === 'forged' ? 'Geschmiedet' : 'Guss/Serie';
+
+        document.getElementById('tune-lambda').value = t.lambdaTarget;
+        document.getElementById('val-lambda').textContent = `λ ${t.lambdaTarget.toFixed(2)}`;
+
+        document.getElementById('tune-ignition').value = t.ignitionDeg;
+        document.getElementById('val-ignition').textContent = `${t.ignitionDeg >= 0 ? '+' : ''}${t.ignitionDeg}° KW`;
+
+        document.getElementById('tune-pops').value = t.popsPct;
+        document.getElementById('val-pops').textContent = `${t.popsPct}%`;
+
+        document.getElementById('tune-revlimit-fuel').value = t.cutAggressiveness;
+        document.getElementById('val-cut-aggressiveness').textContent =
+          t.cutAggressiveness > 75 ? 'Hart' : t.cutAggressiveness < 40 ? 'Sanft' : 'Sport';
+
+        document.getElementById('tune-exhaust').value = t.exhaust;
         document.getElementById('val-exhaust').textContent =
-          state.tuning.exhaust === 'titanium' ? 'Titanium' : state.tuning.exhaust === 'sport' ? 'Sport' : 'Serie';
+          t.exhaust === 'titanium' ? 'Titanium' : t.exhaust === 'sport' ? 'Sport' : 'Serie';
 
-        document.getElementById('tune-flow').value = state.tuning.flowPct;
-        document.getElementById('val-flow').textContent = `${state.tuning.flowPct}%`;
+        document.getElementById('tune-headers').value = t.headers;
+        document.getElementById('val-headers').textContent =
+          t.headers === 'straight' ? 'Straight Pipe' : t.headers === 'sportcat' ? 'Fächer + Sportkat' : 'Serie';
 
-        document.getElementById('tune-clutchtype').value = state.tuning.clutchType;
+        document.getElementById('tune-flow').value = t.flowPct;
+        document.getElementById('val-flow').textContent = `${t.flowPct}%`;
+
+        document.getElementById('tune-glow').value = t.glowPct;
+        document.getElementById('val-glow').textContent = `${t.glowPct}%`;
+
+        document.getElementById('tune-clutchtype').value = t.clutchType;
         document.getElementById('val-clutchtype').textContent =
-          state.tuning.clutchType === 'race' ? 'Racing' : state.tuning.clutchType === 'sport' ? 'Sport' : 'Serie';
+          t.clutchType === 'race' ? 'Sinter-Race' : t.clutchType === 'sport' ? 'Sport' : 'Serie';
 
-        document.getElementById('tune-bitecenter').value = state.tuning.biteCenter;
-        document.getElementById('val-bitecenter').textContent = `${state.tuning.biteCenter}%`;
+        document.getElementById('tune-bitecenter').value = t.biteCenter;
+        document.getElementById('val-bitecenter').textContent = `${t.biteCenter}%`;
 
-        document.getElementById('tune-finaldrive').value = state.tuning.finalDrive;
-        document.getElementById('val-finaldrive').textContent = `${state.tuning.finalDrive.toFixed(2)}`;
+        document.getElementById('tune-bitewidth').value = t.biteWidthPct;
+        document.getElementById('val-bitewidth').textContent = `${t.biteWidthPct}%`;
 
-        document.getElementById('tune-wheelradius').value = state.tuning.wheelRadius;
-        document.getElementById('val-wheelradius').textContent = `${state.tuning.wheelRadius.toFixed(2)} m`;
+        document.getElementById('tune-flywheel').value = t.flywheelPct;
+        document.getElementById('val-flywheel').textContent =
+          t.flywheelPct < 80 ? `Leicht (${t.flywheelPct}%)` : t.flywheelPct > 120 ? `Schwer (${t.flywheelPct}%)` : `Serie (${t.flywheelPct}%)`;
+
+        document.getElementById('tune-gearing').value = t.gearing;
+        document.getElementById('val-gearing').textContent =
+          t.gearing === 'short' ? 'Kurz' : t.gearing === 'long' ? 'Lang' : 'Serie';
+
+        document.getElementById('tune-finaldrive').value = t.finalDrive;
+        document.getElementById('val-finaldrive').textContent = `${t.finalDrive.toFixed(2)}`;
+
+        document.getElementById('tune-wheelradius').value = t.wheelRadius;
+        document.getElementById('val-wheelradius').textContent = `${t.wheelRadius.toFixed(2)} m`;
 
         updateBiteMarkerUI();
       }
 
-      document.getElementById('tune-displacement').addEventListener('input', (e) => {
-        state.tuning.displacement = Number(e.target.value);
-        syncTuningUI();
-      });
-      document.getElementById('tune-redline').addEventListener('input', (e) => {
-        state.tuning.redline = Number(e.target.value);
-        syncTuningUI();
-      });
       document.getElementById('tune-induction').addEventListener('change', (e) => {
         state.tuning.induction = e.target.value;
-        if (state.tuning.induction !== 'na' && state.tuning.boostMax < 0.4) {
-          state.tuning.boostMax = 0.65;
+        if (state.tuning.induction !== 'na' && state.tuning.boostMax < 0.45) {
+          state.tuning.boostMax = 0.75;
         } else if (state.tuning.induction === 'na') {
           state.tuning.boostMax = 0.0;
         }
@@ -1959,14 +2600,70 @@
         }
         syncTuningUI();
       });
+      document.getElementById('tune-spool').addEventListener('input', (e) => {
+        state.tuning.spoolSize = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-intercooler').addEventListener('input', (e) => {
+        state.tuning.intercoolerPct = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-intake').addEventListener('change', (e) => {
+        state.tuning.intake = e.target.value;
+        syncTuningUI();
+      });
+      document.getElementById('tune-displacement').addEventListener('input', (e) => {
+        state.tuning.displacement = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-redline').addEventListener('input', (e) => {
+        state.tuning.redline = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-compression').addEventListener('input', (e) => {
+        state.tuning.compression = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-cams').addEventListener('change', (e) => {
+        state.tuning.cams = e.target.value;
+        syncTuningUI();
+      });
+      document.getElementById('tune-forged').addEventListener('change', (e) => {
+        state.tuning.forged = e.target.value;
+        syncTuningUI();
+      });
+      document.getElementById('tune-lambda').addEventListener('input', (e) => {
+        state.tuning.lambdaTarget = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-ignition').addEventListener('input', (e) => {
+        state.tuning.ignitionDeg = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-pops').addEventListener('input', (e) => {
+        state.tuning.popsPct = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-revlimit-fuel').addEventListener('input', (e) => {
+        state.tuning.cutAggressiveness = Number(e.target.value);
+        syncTuningUI();
+      });
       document.getElementById('tune-exhaust').addEventListener('change', (e) => {
         state.tuning.exhaust = e.target.value;
-        if (e.target.value === 'titanium' && state.tuning.flowPct < 120) state.tuning.flowPct = 124;
-        if (e.target.value === 'sport' && state.tuning.flowPct < 110) state.tuning.flowPct = 112;
+        if (e.target.value === 'titanium' && state.tuning.flowPct < 122) state.tuning.flowPct = 126;
+        if (e.target.value === 'sport' && state.tuning.flowPct < 110) state.tuning.flowPct = 114;
+        syncTuningUI();
+      });
+      document.getElementById('tune-headers').addEventListener('change', (e) => {
+        state.tuning.headers = e.target.value;
         syncTuningUI();
       });
       document.getElementById('tune-flow').addEventListener('input', (e) => {
         state.tuning.flowPct = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-glow').addEventListener('input', (e) => {
+        state.tuning.glowPct = Number(e.target.value);
         syncTuningUI();
       });
       document.getElementById('tune-clutchtype').addEventListener('change', (e) => {
@@ -1975,6 +2672,18 @@
       });
       document.getElementById('tune-bitecenter').addEventListener('input', (e) => {
         state.tuning.biteCenter = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-bitewidth').addEventListener('input', (e) => {
+        state.tuning.biteWidthPct = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-flywheel').addEventListener('input', (e) => {
+        state.tuning.flywheelPct = Number(e.target.value);
+        syncTuningUI();
+      });
+      document.getElementById('tune-gearing').addEventListener('change', (e) => {
+        state.tuning.gearing = e.target.value;
         syncTuningUI();
       });
       document.getElementById('tune-finaldrive').addEventListener('input', (e) => {
